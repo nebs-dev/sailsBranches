@@ -32,7 +32,9 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
 
-
+    'POST /branch': 'BranchController.test',
+    'POST /branch/create': 'BranchController.create',
+    'POST /branch': 'BranchController.list',
 
     'GET /*': {
         view: 'homepage',

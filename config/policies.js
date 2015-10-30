@@ -38,8 +38,8 @@ module.exports.policies = {
     '*': false
   },
 
-  'ApplicationController': {
-    '*': ['tokenAuth']
+  'BranchController': {
+    '*': true
   }
 
   /***************************************************************************

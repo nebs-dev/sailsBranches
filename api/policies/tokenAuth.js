@@ -24,8 +24,17 @@ module.exports = function (req, res, next) {
     sailsTokenAuth.verifyToken(token, function (err, token) {
         if (err) return res.json(401, {err: 'The token is not valid'});
 
-        req.token = token;
+        // Check user secret
+        User.findOne(token.userId).then(function (user) {
+            if (user.secret != token.secret) {
+                return res.json(401, {err: 'The token is not valid'});
+            }
 
-        next();
+            req.token = token;
+            next();
+
+        }).catch(function (err) {
+            if (err) return res.json(401, err);
+        });
     });
 };

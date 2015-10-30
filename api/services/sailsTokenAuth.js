@@ -3,9 +3,8 @@ var jwt = require('jsonwebtoken');
 module.exports = {
 
     issueToken: function (payload) {
-        var token = jwt.sign(payload, process.env.TOKEN_SECRET || "our biggest secret", {
-            expiresIn: 3600
-        });
+
+        var token = jwt.sign(payload, process.env.TOKEN_SECRET || "our biggest secret");
         return token;
     },
 
