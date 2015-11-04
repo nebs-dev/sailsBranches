@@ -11,30 +11,30 @@ module.exports = function (req, res, next) {
                 token = credentials;
             }
         } else {
-            return res.json(401, {err: 'Format is Authorization: Bearer [token]'});
+            return res.unauthorized('Format is Authorization: Bearer [token]');
         }
     } else if (req.param('token')) {
         token = req.param('token');
         // We delete the token from param to not mess with blueprints
         delete req.query.token;
     } else {
-        return res.json(401, {err: 'No Authorization header was found'});
+        return res.unauthorized('No Authorization header was found');
     }
 
     sailsTokenAuth.verifyToken(token, function (err, token) {
-        if (err) return res.json(401, {err: 'The token is not valid'});
+        if (err) return res.unauthorized('The token is not valid');
 
         // Check user secret
         User.findOne(token.userId).then(function (user) {
             if (user.secret != token.secret) {
-                return res.json(401, {err: 'The token is not valid'});
+                return res.unauthorized('The token is not valid');
             }
 
             req.token = token;
             next();
 
         }).catch(function (err) {
-            if (err) return res.json(401, err);
+            if (err) return res.unauthorized(err);
         });
     });
 };

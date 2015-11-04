@@ -27,13 +27,17 @@ module.exports = {
             required: false
         },
 
-        superadmin: {
-            type: 'boolean',
-            defaultsTo: false
+        role: {
+            model: 'role'
         },
 
         branches: {
             collection: 'branch',
+            via: 'user'
+        },
+
+        permissions: {
+            collection: 'permission',
             via: 'user'
         },
 
@@ -46,16 +50,26 @@ module.exports = {
     },
 
 
+    /**
+     * Set random secret
+     * @param user
+     * @returns {string}
+     */
     setSecret: function (user) {
         var random = Math.random().toString(36).substring(7);
 
-        if(user) {
+        if (user) {
             user.secret = random;
         }
 
         return random;
     },
 
+    /**
+     * Encrypt password and set secret before create
+     * @param values
+     * @param next
+     */
     beforeCreate: function (values, next) {
         var _this = this;
         bcrypt.genSalt(10, function (err, salt) {
@@ -71,6 +85,12 @@ module.exports = {
         });
     },
 
+    /**
+     * Check if password is valid
+     * @param password
+     * @param user
+     * @param cb
+     */
     validPassword: function (password, user, cb) {
         bcrypt.compare(password, user.encryptedPassword, function (err, match) {
             if (err) cb(err);

@@ -7,7 +7,25 @@
 
 module.exports = {
 
-    'show': function (req, res) {
+    /**
+     * List all users
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+        User.find().populateAll().then(function (users) {
+            return res.json(users);
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
+     * Show user profile
+     * @param req
+     * @param res
+     */
+    show: function (req, res) {
         var user_id = req.params.id;
 
         User.findOne(user_id).then(function (user) {
@@ -15,7 +33,31 @@ module.exports = {
             return res.json(user);
 
         }).catch(function (err) {
-            return res.serverError();
+            return res.negotiate(err);
+        });
+    },
+
+    /**
+     * Add role to user
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    addRole: function (req, res) {
+        var params = req.params.all();
+        if (!params.user_id || !params.role_id) return res.customBadRequest('Missing Parameters.');
+
+        Role.findOne(params.role_id).then(function (role) {
+
+            role.users.add(params.user_id);
+            role.save(function (err, role) {
+               if (err) return res.negotiate(err);
+
+                return res.json(role);
+            });
+
+        }).catch(function (err) {
+           return res.negotiate(err);
         });
     }
 

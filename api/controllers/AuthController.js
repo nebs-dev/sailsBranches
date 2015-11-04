@@ -11,22 +11,16 @@ module.exports = {
         var email = req.param('email');
         var password = req.param('password');
 
-        if (!email || !password) {
-            return res.json(401, {err: 'email and password required'});
-        }
+        if (!email || !password) return res.customBadRequest('Missing Parameters.');
 
         User.findOneByEmail(email, function (err, user) {
-            if (!user) {
-                return res.json(401, {err: 'invalid email or password'});
-            }
+            if (!user) return res.accessDenied('Invalid email or password');
 
             User.validPassword(password, user, function (err, valid) {
-                if (err) {
-                    return res.json(403, {err: 'forbidden'});
-                }
+                if (err) return res.accessDenied();
 
                 if (!valid) {
-                    return res.json(401, {err: 'invalid email or password'});
+                    return res.accessDenied('invalid email or password');
                 } else {
                     res.json({user: user, token: sailsTokenAuth.issueToken({userId: user.id, secret: user.secret})});
                 }

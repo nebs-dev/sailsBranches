@@ -36,12 +36,21 @@ module.exports = {
 
         user: {
             model: 'user'
+        },
+
+        permissions: {
+            collection: 'permission',
+            via: 'branch'
         }
     },
 
 
+    /**
+     * Set parents for created branch
+     * @param values
+     * @param cb
+     */
     beforeCreate: function (values, cb) {
-
         // get parent object
         Branch.findOne(values.parent).then(function (parent) {
 
@@ -64,10 +73,17 @@ module.exports = {
         });
     },
 
+    /**
+     * Before update set parents for updated branch and all its children
+     * @param valuesToBeUpdated
+     * @param cb
+     */
     beforeUpdate: function (valuesToBeUpdated, cb) {
-
         // Get this child values before update ( to get its children )
         Branch.findOne(valuesToBeUpdated.id).populateAll().then(function (updatedChild) {
+
+            // If parent didn't change return
+            if (valuesToBeUpdated.parent == updatedChild.parent) return cb();
 
             // Get future parent of this updated child
             Branch.findOne(valuesToBeUpdated.parent).then(function (parent) {

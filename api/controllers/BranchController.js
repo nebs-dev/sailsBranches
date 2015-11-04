@@ -7,6 +7,24 @@
 
 module.exports = {
 
+    list: function (req, res) {
+        Branch.find().populateAll().then(function (branches) {
+            return res.json(branches);
+        }).catch(function (err) {
+            return res.json(err);
+        });
+    },
+
+    create: function (req, res) {
+        var params = req.params.all();
+
+        Branch.create(params).then(function (branch) {
+            return res.json(branch);
+        }).catch(function (err) {
+            return res.json(err);
+        });
+    },
+
     test: function (req, res) {
         var newParent = req.param('parent');
 
@@ -22,16 +40,6 @@ module.exports = {
                         if (err) return res.json(err);
 
                         return res.json(child);
-
-                        //child.updateParents(parent).then(function() {
-                        //    console.log("e sad ja!");
-                        //
-                        //    child.save(function (err, child) {
-                        //        if (err) return res.json(err);
-                        //        return res.json(child);
-                        //    });
-                        //});
-
                     });
 
                 } else {
@@ -39,26 +47,6 @@ module.exports = {
                 }
             });
 
-        }).catch(function (err) {
-            return res.json(err);
-        });
-    },
-
-
-    create: function (req, res) {
-        var params = req.params.all();
-
-        Branch.create(params).then(function (branch) {
-            return res.json(branch);
-        }).catch(function (err) {
-            return res.json(err);
-        });
-    },
-
-
-    list: function (req, res) {
-        Branch.find().populateAll().then(function (branches) {
-            return res.json(branches);
         }).catch(function (err) {
             return res.json(err);
         });

@@ -39,18 +39,6 @@ module.exports.routes = {
         skipRegex: /^\/api\/.*$/
     },
 
-    // AUTH
-    'POST /api/auth/login': 'AuthController.login',
-    'POST /api/auth/register': 'AuthController.register',
-
-    // USER
-    'POST /api/user/show/:id': 'UserController.show',
-
-    // BRANCH
-    'POST /test': 'BranchController.test',
-    'POST /branch/create': 'BranchController.create',
-    'GET /api/branch': 'BranchController.list'
-
     /***************************************************************************
      *                                                                          *
      * Custom routes here...                                                    *
@@ -60,5 +48,23 @@ module.exports.routes = {
      * for configuration options and examples.                                  *
      *                                                                          *
      ***************************************************************************/
+
+    // AUTH
+    'POST /api/auth/login': 'Auth.login',
+    'POST /api/auth/register': 'Auth.register',
+
+    // USER
+    'GET /api/users': 'User.list',
+    'POST /api/user/show/:id': 'User.show',
+    'POST /api/user/addRole': 'User.addRole',
+
+    // BRANCH
+    'POST /test': 'Branch.test',
+    'GET /api/branches': 'Branch.list',
+    'POST /api/branch/create': 'Branch.create',
+
+    // ROLES
+    'GET /api/roles': 'Role.list',
+    'POST /api/role/create': 'Role.create'
 
 };
