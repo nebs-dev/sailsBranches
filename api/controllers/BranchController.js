@@ -8,18 +8,39 @@
 module.exports = {
 
     test: function (req, res) {
-        Branch.findOne(1).then(function(branch1) {
-            Branch.findOne(2).then(function(branch2) {
+        var newParent = req.param('parent');
 
-                branch1.children.add(branch2.id);
+        Branch.findOne(newParent).then(function (parent) {
+            var parentId = parent ? parent.id : 0;
 
-                branch1.save(function(err, branch){
-                    return res.json(branch);
-                });
+            Branch.findOne(3).then(function (child) {
+
+                if (child.parent != parentId) {
+
+                    child.parent = parentId;
+                    child.save(function (err, child) {
+                        if (err) return res.json(err);
+
+                        return res.json(child);
+
+                        //child.updateParents(parent).then(function() {
+                        //    console.log("e sad ja!");
+                        //
+                        //    child.save(function (err, child) {
+                        //        if (err) return res.json(err);
+                        //        return res.json(child);
+                        //    });
+                        //});
+
+                    });
+
+                } else {
+                    return res.json(child);
+                }
             });
 
         }).catch(function (err) {
-           return res.json(err);
+            return res.json(err);
         });
     },
 
@@ -28,7 +49,7 @@ module.exports = {
         var params = req.params.all();
 
         Branch.create(params).then(function (branch) {
-           return res.json(branch);
+            return res.json(branch);
         }).catch(function (err) {
             return res.json(err);
         });

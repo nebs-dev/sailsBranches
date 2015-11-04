@@ -32,9 +32,6 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
 
-    'POST /branch': 'BranchController.test',
-    'POST /branch/create': 'BranchController.create',
-    'POST /branch': 'BranchController.list',
 
     'GET /*': {
         view: 'homepage',
@@ -49,8 +46,10 @@ module.exports.routes = {
     // USER
     'POST /api/user/show/:id': 'UserController.show',
 
-    // APPLICATION
-    'POST /api/application/create': 'ApplicationController.create',
+    // BRANCH
+    'POST /test': 'BranchController.test',
+    'POST /branch/create': 'BranchController.create',
+    'GET /api/branch': 'BranchController.list'
 
     /***************************************************************************
      *                                                                          *
