@@ -41,6 +41,10 @@ module.exports = {
             via: 'user'
         },
 
+        tree: {
+            model: 'tree'
+        },
+
         toJSON: function () {
             var obj = this.toObject();
             delete obj.encryptedPassword;

@@ -7,6 +7,11 @@
 
 module.exports = {
 
+    /**
+     * List all branches
+     * @param req
+     * @param res
+     */
     list: function (req, res) {
         Branch.find().populateAll().then(function (branches) {
             return res.json(branches);
@@ -15,6 +20,11 @@ module.exports = {
         });
     },
 
+    /**
+     * Create new branch
+     * @param req
+     * @param res
+     */
     create: function (req, res) {
         var params = req.params.all();
 
@@ -24,6 +34,35 @@ module.exports = {
             return res.json(err);
         });
     },
+
+    /**
+     * Update branch
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var params = req.params.all();
+
+        Branch.update(req.params.id, params).then(function (branch) {
+            return res.json(branch);
+        }).catch(function (err) {
+           return res.negotiate(err);
+        });
+    },
+
+    /**
+     * View branch
+     * @param req
+     * @param res
+     */
+    view: function (req, res) {
+      Branch.findOne(req.params.id).then(function (branch) {
+          return res.json(branch);
+      }).catch(function (err) {
+         return res.negotiate(err);
+      });
+    },
+
 
     test: function (req, res) {
         var newParent = req.param('parent');

@@ -56,15 +56,28 @@ module.exports.routes = {
     // USER
     'GET /api/users': 'User.list',
     'POST /api/user/show/:id': 'User.show',
+    'POST /api/user/update/:id': 'User.update',
     'POST /api/user/addRole': 'User.addRole',
+
+    // ROLES
+    'GET /api/roles': 'Role.list',
+    'POST /api/role/create': 'Role.create',
 
     // BRANCH
     'POST /test': 'Branch.test',
     'GET /api/branches': 'Branch.list',
+    'GET /api/branch/:id': 'Branch.view',
     'POST /api/branch/create': 'Branch.create',
+    'POST /api/branch/update/:id': 'Branch.update',
 
-    // ROLES
-    'GET /api/roles': 'Role.list',
-    'POST /api/role/create': 'Role.create'
+    // PERMISSIONS
+    'POST /api/permission/add': 'Permission.add',
+    'POST /api/permission/remove': 'Permission.remove',
+
+    // LICENCE
+    'POST /api/licence/create': 'Licence.create',
+
+    // TREE
+    'POST /api/tree/create': 'Tree.create'
 
 };

@@ -41,6 +41,11 @@ module.exports = {
         permissions: {
             collection: 'permission',
             via: 'branch'
+        },
+
+        tree: {
+            model: 'tree',
+            required: true
         }
     },
 
@@ -79,11 +84,15 @@ module.exports = {
      * @param cb
      */
     beforeUpdate: function (valuesToBeUpdated, cb) {
+
+        delete valuesToBeUpdated.user;
+
         // Get this child values before update ( to get its children )
         Branch.findOne(valuesToBeUpdated.id).populateAll().then(function (updatedChild) {
+            if (!updatedChild) return cb('Not found');
 
             // If parent didn't change return
-            if (valuesToBeUpdated.parent == updatedChild.parent) return cb();
+            if ((valuesToBeUpdated.parent == updatedChild.parent || !valuesToBeUpdated.parent)) return cb();
 
             // Get future parent of this updated child
             Branch.findOne(valuesToBeUpdated.parent).then(function (parent) {

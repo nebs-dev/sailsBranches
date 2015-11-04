@@ -30,19 +30,32 @@ module.exports.policies = {
 
     'UserController': {
         'show': ['tokenAuth', 'ownUser'],
-        'add': ['tokenAuth', 'ownAssociations'],
-        'create': true,
-        'findOne': ['tokenAuth', 'ownUser'],
-        'populate': ['tokenAuth', 'ownAssociations'],
-        'remove': ['tokenAuth', 'ownAssociations'],
+        'update': ['tokenAuth', 'ownUser'],
+        'create': true
         //'*': false
     },
 
+    'RoleController': {
+        '*': ['tokenAuth', 'isSuperadmin']
+    },
+
     'BranchController': {
+        'view': ['tokenAuth', 'branchAccess'],
+        'create': ['tokenAuth', 'branchCreate'],
         '*': true
     },
 
-    'RoleController': {
+    'PermissionController': {
+        'add': ['tokenAuth', 'isSuperadmin'],
+        'remove': ['tokenAuth', 'isSuperadmin'],
+        '*': true
+    },
+
+    'LicenceController': {
+        '*': ['tokenAuth', 'isSuperadmin']
+    },
+
+    'TreeController': {
         '*': ['tokenAuth', 'isSuperadmin']
     }
 

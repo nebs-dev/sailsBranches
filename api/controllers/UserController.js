@@ -26,12 +26,25 @@ module.exports = {
      * @param res
      */
     show: function (req, res) {
-        var user_id = req.params.id;
-
-        User.findOne(user_id).then(function (user) {
+        User.findOne(req.params.id).then(function (user) {
             if (!user) return res.notFound();
             return res.json(user);
 
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
+     * Update user
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var params = req.params.all();
+
+        User.update(req.params.id, params).then(function (user) {
+            return res.json(user);
         }).catch(function (err) {
             return res.negotiate(err);
         });
