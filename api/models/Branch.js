@@ -79,6 +79,26 @@ module.exports = {
     },
 
     /**
+     * After Branch create
+     * Create permission for Branch creator
+     * @param newlyInsertedRecord
+     * @param cb
+     */
+    afterCreate: function (newlyInsertedRecord, cb) {
+        var permissionData = {
+            user: newlyInsertedRecord.user,
+            branch: newlyInsertedRecord.id
+        };
+
+        Permission.create(permissionData).then(function (permission) {
+            cb();
+        }).catch(function (err) {
+           cb(err);
+        });
+    },
+
+
+    /**
      * Before update set parents for updated branch and all its children
      * @param valuesToBeUpdated
      * @param cb

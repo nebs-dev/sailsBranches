@@ -13,7 +13,7 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        Branch.find().populateAll().then(function (branches) {
+        Branch.find().then(function (branches) {
             return res.json(branches);
         }).catch(function (err) {
             return res.json(err);

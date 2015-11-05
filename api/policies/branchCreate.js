@@ -1,4 +1,4 @@
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
 
     // Need to be logged in
     if (!req.token || !req.token.userId) return res.accessDenied('You are not allowed to do that');
@@ -29,12 +29,15 @@ module.exports = function(req, res, next) {
                 // Get branches in this level
                 Branch.find({where: {level: level, tree: user.tree.id}}).then(function (levelBranches) {
 
-                    // horizontal
-                    console.log('Horizontal-->', 'Current:', levelBranches.length + 1, 'Licence:', licence.horizontal);
+                    // horizontal check
+                    if (levelBranches.length + 1 > licence.horizontal)
+                        return res.accessDenied('Maximum branches in this level reached.');
 
-                    // vertical
-                    console.log('Vertical-->', 'Current:', level + 1, 'Licence:', licence.vertical)
+                    // vertical check
+                    if (level + 1 > licence.vertical)
+                        return res.accessDenied('Maximum levels reached.');
 
+                    next();
                 });
             });
         });
