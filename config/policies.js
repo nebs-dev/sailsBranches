@@ -57,6 +57,15 @@ module.exports.policies = {
 
     'TreeController': {
         '*': ['tokenAuth', 'isSuperadmin']
+    },
+
+    'FileController': {
+        'getOne': ['tokenAuth', 'isSuperadmin'],
+        '*': true
+    },
+
+    'FileCategoryController': {
+        '*': ['tokenAuth', 'isSuperadmin']
     }
 
     /***************************************************************************

@@ -46,6 +46,11 @@ module.exports = {
         tree: {
             model: 'tree',
             required: true
+        },
+
+        files: {
+            collection: 'file',
+            via: 'branches'
         }
     },
 

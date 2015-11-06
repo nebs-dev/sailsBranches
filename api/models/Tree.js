@@ -27,6 +27,11 @@ module.exports = {
 
         licence: {
             model: 'licence'
+        },
+
+        files: {
+            collection: 'file',
+            via: 'tree'
         }
     }
 };

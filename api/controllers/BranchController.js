@@ -61,34 +61,6 @@ module.exports = {
       }).catch(function (err) {
          return res.negotiate(err);
       });
-    },
-
-
-    test: function (req, res) {
-        var newParent = req.param('parent');
-
-        Branch.findOne(newParent).then(function (parent) {
-            var parentId = parent ? parent.id : 0;
-
-            Branch.findOne(3).then(function (child) {
-
-                if (child.parent != parentId) {
-
-                    child.parent = parentId;
-                    child.save(function (err, child) {
-                        if (err) return res.json(err);
-
-                        return res.json(child);
-                    });
-
-                } else {
-                    return res.json(child);
-                }
-            });
-
-        }).catch(function (err) {
-            return res.json(err);
-        });
     }
 
 };

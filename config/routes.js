@@ -64,7 +64,6 @@ module.exports.routes = {
     'POST /api/role/create': 'Role.create',
 
     // BRANCH
-    'POST /test': 'Branch.test',
     'GET /api/branches': 'Branch.list',
     'GET /api/branch/:id': 'Branch.view',
     'POST /api/branch/create': 'Branch.create',
@@ -78,6 +77,17 @@ module.exports.routes = {
     'POST /api/licence/create': 'Licence.create',
 
     // TREE
-    'POST /api/tree/create': 'Tree.create'
+    'POST /api/tree/create': 'Tree.create',
+
+    // FILE CATEGORY
+    'GET /api/fileCategories': 'FileCategory.list',
+    'POST /api/fileCategory/create': 'FileCategory.create',
+    'POST /api/fileCategory/destroy/:id': 'FileCategory.destroy',
+
+    // FILE
+    'POST /api/file/create': 'File.create',
+    'POST /api/file/destroy/:id': 'File.destroy',
+    'POST /api/file/upload': 'File.upload',
+    'GET /api/file/get/:id': 'File.getOne'
 
 };
