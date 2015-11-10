@@ -31,8 +31,8 @@ module.exports.policies = {
     'UserController': {
         'show': ['tokenAuth', 'ownUser'],
         'update': ['tokenAuth', 'ownUser'],
-        'create': true
-        //'*': false
+        'create': true,
+        '*': false
     },
 
     'RoleController': {
