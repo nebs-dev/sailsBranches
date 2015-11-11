@@ -36,7 +36,7 @@ module.exports.routes = {
     'GET /*': {
         view: 'homepage',
         skipAssets: true,
-        skipRegex: /^\/api\/.*$/
+        skipRegex: [/^\/api\/.*$/, /^\/docs\/.*$/]
     },
 
     /***************************************************************************
@@ -49,45 +49,212 @@ module.exports.routes = {
      *                                                                          *
      ***************************************************************************/
 
-    // AUTH
+    //////////////////////////
+    ////////// AUTH //////////
+    //////////////////////////
+    /**
+     * @api {post} /api/auth/login Login
+     * @apiGroup Auth
+     *
+     * @apiParam {string} email User email (required)
+     * @apiParam {string} password User password (required)
+     */
     'POST /api/auth/login': 'Auth.login',
+
+    /**
+     * @api {post} /api/auth/register Register
+     * @apiGroup Auth
+     *
+     * @apiParam {string} email User email (required)
+     * @apiParam {string} password User password (required)
+     * @apiParam {string} confirmPassword Repeated password (required)
+     */
     'POST /api/auth/register': 'Auth.register',
 
-    // USER
+    //////////////////////////
+    ////////// USER //////////
+    //////////////////////////
+    /**
+     * @api {get} /api/users list
+     * @apiGroup User
+     */
     'GET /api/users': 'User.list',
+
     'POST /api/user/show/:id': 'User.show',
+
+    /**
+     * @api {post} /api/user/update/:id update
+     * @apiGroup User
+     *
+     * @apiParam {string} email User email
+     * @apiParam {string} password User password
+     */
     'POST /api/user/update/:id': 'User.update',
+
+    /**
+     * @api {post} /api/user/addRole add Role to User
+     * @apiGroup User
+     *
+     * @apiParam {integer} user_id User ID (required)
+     * @apiParam {integer} role_id Role ID (required)
+     */
     'POST /api/user/addRole': 'User.addRole',
 
-    // ROLES
+    ///////////////////////////
+    ////////// ROLES //////////
+    ///////////////////////////
+    /**
+     * @api {get} /api/roles list
+     * @apiGroup Role
+     */
     'GET /api/roles': 'Role.list',
+
+    /**
+     * @api {post} /api/role/create create
+     * @apiGroup Role
+     *
+     * @apiParam {string} name Role name (required)
+     */
     'POST /api/role/create': 'Role.create',
 
-    // BRANCH
+    ////////////////////////////
+    ////////// BRANCH //////////
+    ////////////////////////////
+    /**
+     * @api {get} /api/branches list
+     * @apiGroup Branch
+     */
     'GET /api/branches': 'Branch.list',
+
+    /**
+     * @api {get} /api/branch/:id Branch data
+     * @apiGroup Branch
+     */
     'GET /api/branch/:id': 'Branch.view',
+
+    /**
+     * @api {post} /api/branch/create create
+     * @apiGroup Branch
+     *
+     * @apiParam {string} name Branch name (required)
+     * @apiParam {integer} parent parent Branch ID
+     * @apiParam {integer} user Branch creator ID (superadmin)
+     * @apiParam {integer} user tree Tree ID (superadmin)
+     */
     'POST /api/branch/create': 'Branch.create',
+
+    /**
+     * @api {post} /api/branch/update/:id update
+     * @apiGroup Branch
+     *
+     * @apiParam {string} name Branch name
+     * @apiParam {integer} user parent Branch ID
+     * @apiParam {integer} user Branch creator ID (superadmin)
+     * @apiParam {integer} tree Tree ID (superadmin)
+     */
     'POST /api/branch/update/:id': 'Branch.update',
 
-    // PERMISSIONS
+    //////////////////////////////////
+    ////////// PERMISSSIONS //////////
+    //////////////////////////////////
+    /**
+     * @api {post} /api/permission/add add
+     * @apiGroup Permission
+     *
+     * @apiParam {integer} user_id User ID (required)
+     * @apiParam {integer} branch Branch ID (required)
+     */
     'POST /api/permission/add': 'Permission.add',
+
+    /**
+     * @api {post} /api/permission/remove remove
+     * @apiGroup Permission
+     *
+     * @apiParam {integer} user_id User ID (required)
+     * @apiParam {integer} branch Branch ID (required)
+     */
     'POST /api/permission/remove': 'Permission.remove',
 
-    // LICENCE
+    /////////////////////////////
+    ////////// LICENCE //////////
+    /////////////////////////////
+    /**
+     * @api {post} /api/licence/create create
+     * @apiGroup Licence
+     *
+     * @apiParam {string} name Licence name (required)
+     * @apiParam {integer} vertical vertical levels (required)
+     * @apiParam {integer} horizontal horizontal branches per level (required)
+     * @apiParam {float} price horizontal Licence price (required)
+     * @apiParam {boolean} status Licence status - active/inactive (true/false)
+     */
     'POST /api/licence/create': 'Licence.create',
 
-    // TREE
+    //////////////////////////
+    ////////// TREE //////////
+    //////////////////////////
+    /**
+     * @api {post} /api/tree/create create
+     * @apiGroup Tree
+     *
+     * @apiParam {string} name Tree name (required)
+     */
     'POST /api/tree/create': 'Tree.create',
 
-    // FILE CATEGORY
+    ///////////////////////////////////
+    ////////// FILE CATEGORY //////////
+    ///////////////////////////////////
+    /**
+     * @api {get} /api/fileCategories list
+     * @apiGroup fileCategories
+     */
     'GET /api/fileCategories': 'FileCategory.list',
+
+    /**
+     * @api {post} /api/fileCategories/create create
+     * @apiGroup fileCategories
+     *
+     * @apiParam {string} name fileCategories name (required)
+     */
     'POST /api/fileCategory/create': 'FileCategory.create',
+
+    /**
+     * @api {post} /api/fileCategory/destroy/:id destroy
+     * @apiGroup fileCategories
+     */
     'POST /api/fileCategory/destroy/:id': 'FileCategory.destroy',
 
-    // FILE
+    //////////////////////////
+    ////////// FILE //////////
+    //////////////////////////
     'POST /api/file/create': 'File.create',
+
+    /**
+     * @api {post} /api/file/destroy/:id destroy
+     * @apiGroup File
+     */
     'POST /api/file/destroy/:id': 'File.destroy',
+
+    /**
+     * @api {post} /api/file/upload upload
+     * @apiGroup File
+     *
+     * @apiParam {file} fileToUpload file to upload (required)
+     * @apiParam {integer} tree Tree ID (required)
+     * @apiParam {integer} branch Branch ID
+     */
     'POST /api/file/upload': 'File.upload',
-    'GET /api/file/get/:id': 'File.getOne'
+
+    /**
+     * @api {get} /api/file/get/:id get one
+     * @apiGroup File
+     */
+    'GET /api/file/get/:id': 'File.getOne',
+
+    /**
+     * @api {get} /api/file/getByBranch/:id get all Files in Branch
+     * @apiGroup File
+     */
+    'GET /api/file/getByBranch/:id': 'File.getByBranch'
 
 };

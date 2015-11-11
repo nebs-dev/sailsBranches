@@ -5,6 +5,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
+var fs = require('fs-extra');
 module.exports = {
 
     schema: true,
@@ -29,7 +30,16 @@ module.exports = {
             collection: 'branch',
             via: 'files'
         }
+    },
 
+    afterDestroy: function (destroyedRecords, cb) {
+        var filePath = 'uploads/files/' + destroyedRecords[0].url;
+
+        fs.remove(filePath, function (err) {
+            if (err) return cb(err);
+
+            cb();
+        })
     }
 };
 

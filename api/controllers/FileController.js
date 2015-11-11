@@ -8,29 +8,57 @@
 var path = require('path');
 module.exports = {
 
-
+    /**
+     * Upload file
+     * @param req
+     * @param res
+     */
     upload: function (req, res) {
+        var params = req.params.all();
+
+        if (!params.tree && !params.branch) return res.customBadRequest('Missing Parameters.');
 
         req.file('fileToUpload').upload({
             // don't allow the total upload size to exceed ~10MB
             maxBytes: 10000000,
-            //dirname: require('path').resolve(sails.config.appPath, '/uploads/files'),
             dirname: sails.config.appPath + '/uploads/files/'
+
         }, function whenDone(err, uploadedFiles) {
             if (err) return res.negotiate(err);
 
             // If no files were uploaded, respond with an error.
-            if (uploadedFiles.length === 0) return res.badRequest('No file was uploaded');
+            if (uploadedFiles.length === 0) return res.customBadRequest('No file was uploaded');
 
-            var params = req.params.all();
             params.url = path.basename(uploadedFiles[0].fd);
 
-            // Create file object with path to uploaded file
-            File.create(params).then(function (file) {
-                return res.json(file);
-            }).catch(function (err) {
-               return res.negotiate(err);
-            });
+            // If branch is set use its tree
+            if (params.branch) {
+                Branch.findOne(params.branch).populate('files').then(function (branch) {
+                    params.branch = branch.id;
+                    params.tree = branch.tree;
+
+                    // Create file object with path to uploaded file
+                    File.create(params).then(function (file) {
+
+                        file.branches.add(branch);
+                        file.save();
+
+                        return res.json(file);
+
+                    }).catch(function (err) {
+                        return res.negotiate(err);
+                    });
+                });
+
+            // If branch is NOT set, use tree from params
+            } else {
+                // Create file object with path to uploaded file
+                File.create(params).then(function (file) {
+                    return res.json(file);
+                }).catch(function (err) {
+                    return res.negotiate(err);
+                });
+            }
         });
 
     },
@@ -64,6 +92,11 @@ module.exports = {
     },
 
 
+    /**
+     * Get one file
+     * @param req
+     * @param res
+     */
     getOne: function (req, res) {
         req.validate({
             id: 'integer'
@@ -88,6 +121,21 @@ module.exports = {
                     return res.serverError(err);
                 })
                 .pipe(res);
+        });
+    },
+
+    /**
+     * Get all files from one Branch
+     * @param req
+     * @param res
+     */
+    getByBranch: function (req, res) {
+        var params = req.params.all();
+
+        Branch.findOne(params.id).populate('files').then(function (branch) {
+            return res.json(branch.files);
+        }).catch(function (err) {
+           return res.negotiate(err);
         });
     }
 
