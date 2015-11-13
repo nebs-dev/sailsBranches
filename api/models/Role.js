@@ -16,6 +16,16 @@ module.exports = {
             unique: true
         },
 
+        add_branch: {
+            type: 'boolean',
+            required: true
+        },
+
+        add_student: {
+            type: 'boolean',
+            required: true
+        },
+
         users: {
             collection: 'user',
             via: 'role'

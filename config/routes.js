@@ -171,7 +171,7 @@ module.exports.routes = {
      * @apiGroup Permission
      *
      * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} branch Branch ID (required)
+     * @apiParam {integer} branch_id Branch ID (required)
      */
     'POST /api/permission/add': 'Permission.add',
 
@@ -180,7 +180,7 @@ module.exports.routes = {
      * @apiGroup Permission
      *
      * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} branch Branch ID (required)
+     * @apiParam {integer} branch_id Branch ID (required)
      */
     'POST /api/permission/remove': 'Permission.remove',
 

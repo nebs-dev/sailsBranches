@@ -48,8 +48,8 @@ module.exports.policies = {
     },
 
     'PermissionController': {
-        'add': ['tokenAuth', 'isSuperadmin'],
-        'remove': ['tokenAuth', 'isSuperadmin'],
+        'add': ['tokenAuth', 'ownBranch'],
+        'remove': ['tokenAuth', 'branchActions'],
         '*': true
     },
 

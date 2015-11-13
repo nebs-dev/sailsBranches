@@ -304,7 +304,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "branch",
+            "field": "branch_id",
             "description": "<p>Branch ID (required)</p> "
           }
         ]
@@ -334,7 +334,7 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "branch",
+            "field": "branch_id",
             "description": "<p>Branch ID (required)</p> "
           }
         ]
