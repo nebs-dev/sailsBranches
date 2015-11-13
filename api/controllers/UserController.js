@@ -72,7 +72,31 @@ module.exports = {
         }).catch(function (err) {
            return res.negotiate(err);
         });
-    }
+    },
+
+    /**
+     * Add Tree to User
+     * @param req
+     * @param res
+     * @returns {*}
+     */
+    addTree: function (req, res) {
+        var params = req.params.all();
+        if (!params.user_id || !params.tree_id) return res.customBadRequest('Missing Parameters.');
+
+        Tree.findOne(params.tree_id).then(function (tree) {
+
+            tree.users.add(params.user_id);
+            tree.save(function (err, tree) {
+                if (err) return res.negotiate(err);
+
+                return res.json(tree);
+            });
+
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
 
 };
 

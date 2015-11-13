@@ -100,6 +100,15 @@ module.exports.routes = {
      */
     'POST /api/user/addRole': 'User.addRole',
 
+    /**
+     * @api {post} /api/user/addTree add Tree to User
+     * @apiGroup User
+     *
+     * @apiParam {integer} user_id User ID (required)
+     * @apiParam {integer} tree_id Tree ID (required)
+     */
+    'POST /api/user/addTree': 'User.addTree',
+
     ///////////////////////////
     ////////// ROLES //////////
     ///////////////////////////
@@ -138,8 +147,8 @@ module.exports.routes = {
      *
      * @apiParam {string} name Branch name (required)
      * @apiParam {integer} parent parent Branch ID
+     * @apiParam {integer} tree tree Tree ID ID (superadmin)
      * @apiParam {integer} user Branch creator ID (superadmin)
-     * @apiParam {integer} user tree Tree ID (superadmin)
      */
     'POST /api/branch/create': 'Branch.create',
 
@@ -200,6 +209,15 @@ module.exports.routes = {
      * @apiParam {string} name Tree name (required)
      */
     'POST /api/tree/create': 'Tree.create',
+
+    /**
+     * @api {post} /api/tree/addLicence add Licence to Tree
+     * @apiGroup Tree
+     *
+     * @apiParam {integer} tree_id Tree ID (required)
+     * @apiParam {integer} licence_id Licence ID (required)
+     */
+    'POST /api/tree/addLicence': 'Tree.addLicence',
 
     ///////////////////////////////////
     ////////// FILE CATEGORY //////////

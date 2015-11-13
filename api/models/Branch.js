@@ -61,8 +61,10 @@ module.exports = {
      * @param cb
      */
     beforeCreate: function (values, cb) {
+        var parent = values.parent || 'undefined';
+
         // get parent object
-        Branch.findOne(values.parent).then(function (parent) {
+        Branch.findOne(parent).then(function (parent) {
 
             // if parent level is 0
             parent = parent || {};

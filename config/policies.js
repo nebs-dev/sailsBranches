@@ -32,6 +32,8 @@ module.exports.policies = {
         'show': ['tokenAuth', 'ownUser'],
         'update': ['tokenAuth', 'ownUser'],
         'create': true,
+        'addRole': ['tokenAuth', 'isSuperadmin'],
+        'addTree': ['tokenAuth', 'isSuperadmin'],
         '*': false
     },
 

@@ -112,6 +112,13 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
+            "field": "tree",
+            "description": "<p>tree Tree ID ID (superadmin)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
             "field": "user",
             "description": "<p>Branch creator ID (superadmin)</p> "
           }
@@ -373,6 +380,36 @@ define({ "api": [
   },
   {
     "type": "post",
+    "url": "/api/tree/addLicence",
+    "title": "add Licence to Tree",
+    "group": "Tree",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "tree_id",
+            "description": "<p>Tree ID (required)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "licence_id",
+            "description": "<p>Licence ID (required)</p> "
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "Tree",
+    "name": "PostApiTreeAddlicence"
+  },
+  {
+    "type": "post",
     "url": "/api/tree/create",
     "title": "create",
     "group": "Tree",
@@ -433,6 +470,36 @@ define({ "api": [
     "filename": "config/routes.js",
     "groupTitle": "User",
     "name": "PostApiUserAddrole"
+  },
+  {
+    "type": "post",
+    "url": "/api/user/addTree",
+    "title": "add Tree to User",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "user_id",
+            "description": "<p>User ID (required)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "tree_id",
+            "description": "<p>Tree ID (required)</p> "
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "User",
+    "name": "PostApiUserAddtree"
   },
   {
     "type": "post",

@@ -17,12 +17,17 @@ module.exports = function (req, res, next) {
         if (!user.role || user.role.name != 'superprof') return res.accessDenied('You are not allowed to do that');
 
         // If user is NOT superadmin he has tree
+        if (!user.tree) return res.accessDenied('You have no tree!');
         req.body.tree = user.tree;
 
         var parent = req.body.parent || 'undefined';
 
         // Get parent
         Branch.findOne(parent).then(function (parent) {
+
+            // Not allowed to create branch in a tree without licence
+            if (!user.tree.licence) return res.accessDenied('Your tree has no licence!');
+
             // Get tree licence
             Licence.findOne(user.tree.licence).then(function (licence) {
 
