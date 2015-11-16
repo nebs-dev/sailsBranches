@@ -30,15 +30,15 @@ module.exports = {
      */
     addLicence: function (req, res) {
         var params = req.params.all();
-        if (!params.licence_id || !params.tree_id) return res.customBadRequest('Missing Parameters.');
+        if (!params.licence || !params.tree) return res.customBadRequest('Missing Parameters.');
 
         async.parallel({
             tree: function (cb) {
-                Tree.findOne(params.tree_id).populate('licence').exec(cb);
+                Tree.findOne(params.tree).populate('licence').exec(cb);
             },
 
             licence: function (cb) {
-                Licence.findOne(params.licence_id).exec(cb);
+                Licence.findOne(params.licence).exec(cb);
             }
 
         }, function(err, result) {

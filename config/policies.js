@@ -62,7 +62,7 @@ module.exports.policies = {
     },
 
     'FileController': {
-        'getOne': ['tokenAuth', 'isSuperadmin'],
+        'getOne': ['tokenAuth', 'fileAccess'],
         '*': true
     },
 

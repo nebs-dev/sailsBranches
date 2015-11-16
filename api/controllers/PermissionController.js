@@ -15,15 +15,15 @@ module.exports = {
      */
     add: function (req, res) {
         var params = req.params.all();
-        if (!params.user_id || !params.branch_id) return res.customBadRequest('Missing Parameters.');
+        if (!params.user || !params.branch) return res.customBadRequest('Missing Parameters.');
 
         var data = {
-            user: params.user_id,
-            branch: params.branch_id
+            user: params.user,
+            branch: params.branch
         };
 
         // First check if this permission already exist.
-        Permission.findOne({user: params.user_id, branch: params.branch_id}).then(function (permission) {
+        Permission.findOne({user: params.user, branch: params.branch}).then(function (permission) {
             if (permission) return res.customBadRequest('Already added');
 
             Permission.create(data).then(function (permission) {
@@ -43,9 +43,9 @@ module.exports = {
      */
     remove: function (req, res) {
         var params = req.params.all();
-        if (!params.user_id || !params.branch_id) return res.customBadRequest('Missing Parameters.');
+        if (!params.user || !params.branch) return res.customBadRequest('Missing Parameters.');
 
-        Permission.destroy({where: {user: params.user_id, branch: params.branch_id}}).then(function () {
+        Permission.destroy({where: {user: params.user, branch: params.branch}}).then(function () {
             return res.json('Destroyed');
         }).catch(function (err) {
             return res.negotiate(err);

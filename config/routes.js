@@ -95,8 +95,8 @@ module.exports.routes = {
      * @api {post} /api/user/addRole add Role to User
      * @apiGroup User
      *
-     * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} role_id Role ID (required)
+     * @apiParam {integer} user User ID (required)
+     * @apiParam {integer} role Role ID (required)
      */
     'POST /api/user/addRole': 'User.addRole',
 
@@ -104,8 +104,8 @@ module.exports.routes = {
      * @api {post} /api/user/addTree add Tree to User
      * @apiGroup User
      *
-     * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} tree_id Tree ID (required)
+     * @apiParam {integer} user User ID (required)
+     * @apiParam {integer} tree Tree ID (required)
      */
     'POST /api/user/addTree': 'User.addTree',
 
@@ -170,8 +170,8 @@ module.exports.routes = {
      * @api {post} /api/permission/add add
      * @apiGroup Permission
      *
-     * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} branch_id Branch ID (required)
+     * @apiParam {integer} user User ID (required)
+     * @apiParam {integer} branch Branch ID (required)
      */
     'POST /api/permission/add': 'Permission.add',
 
@@ -179,8 +179,8 @@ module.exports.routes = {
      * @api {post} /api/permission/remove remove
      * @apiGroup Permission
      *
-     * @apiParam {integer} user_id User ID (required)
-     * @apiParam {integer} branch_id Branch ID (required)
+     * @apiParam {integer} user User ID (required)
+     * @apiParam {integer} branch Branch ID (required)
      */
     'POST /api/permission/remove': 'Permission.remove',
 
@@ -214,8 +214,8 @@ module.exports.routes = {
      * @api {post} /api/tree/addLicence add Licence to Tree
      * @apiGroup Tree
      *
-     * @apiParam {integer} tree_id Tree ID (required)
-     * @apiParam {integer} licence_id Licence ID (required)
+     * @apiParam {integer} tree Tree ID (required)
+     * @apiParam {integer} licence Licence ID (required)
      */
     'POST /api/tree/addLicence': 'Tree.addLicence',
 

@@ -297,14 +297,14 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "user_id",
+            "field": "user",
             "description": "<p>User ID (required)</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "branch_id",
+            "field": "branch",
             "description": "<p>Branch ID (required)</p> "
           }
         ]
@@ -327,14 +327,14 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "user_id",
+            "field": "user",
             "description": "<p>User ID (required)</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "branch_id",
+            "field": "branch",
             "description": "<p>Branch ID (required)</p> "
           }
         ]
@@ -390,14 +390,14 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "tree_id",
+            "field": "tree",
             "description": "<p>Tree ID (required)</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "licence_id",
+            "field": "licence",
             "description": "<p>Licence ID (required)</p> "
           }
         ]
@@ -453,14 +453,14 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "user_id",
+            "field": "user",
             "description": "<p>User ID (required)</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "role_id",
+            "field": "role",
             "description": "<p>Role ID (required)</p> "
           }
         ]
@@ -483,14 +483,14 @@ define({ "api": [
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "user_id",
+            "field": "user",
             "description": "<p>User ID (required)</p> "
           },
           {
             "group": "Parameter",
             "type": "<p>integer</p> ",
             "optional": false,
-            "field": "tree_id",
+            "field": "tree",
             "description": "<p>Tree ID (required)</p> "
           }
         ]

@@ -99,7 +99,7 @@ module.exports = {
      */
     getOne: function (req, res) {
         req.validate({
-            id: 'integer'
+            id: 'string'
         });
 
         File.findOne(req.param('id')).exec(function (err, file){

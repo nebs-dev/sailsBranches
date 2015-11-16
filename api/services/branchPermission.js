@@ -3,6 +3,7 @@ module.exports = {
 
     checkPermission: function (user_id, branch_id, callback) {
         User.findOne(user_id).populate('role').populate('permissions').then(function (user) {
+            if (!user) return callback({err: "user not found"});
 
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return callback(null, user, null);

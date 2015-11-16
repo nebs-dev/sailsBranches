@@ -58,11 +58,11 @@ module.exports = {
      */
     addRole: function (req, res) {
         var params = req.params.all();
-        if (!params.user_id || !params.role_id) return res.customBadRequest('Missing Parameters.');
+        if (!params.user || !params.role) return res.customBadRequest('Missing Parameters.');
 
-        Role.findOne(params.role_id).then(function (role) {
+        Role.findOne(params.role).then(function (role) {
 
-            role.users.add(params.user_id);
+            role.users.add(params.user);
             role.save(function (err, role) {
                if (err) return res.negotiate(err);
 
@@ -82,11 +82,11 @@ module.exports = {
      */
     addTree: function (req, res) {
         var params = req.params.all();
-        if (!params.user_id || !params.tree_id) return res.customBadRequest('Missing Parameters.');
+        if (!params.user || !params.tree) return res.customBadRequest('Missing Parameters.');
 
-        Tree.findOne(params.tree_id).then(function (tree) {
+        Tree.findOne(params.tree).then(function (tree) {
 
-            tree.users.add(params.user_id);
+            tree.users.add(params.user);
             tree.save(function (err, tree) {
                 if (err) return res.negotiate(err);
 
