@@ -14,7 +14,7 @@ module.exports = function (req, res, next) {
         }
 
         // Only superprof can create branch for now
-        if (!user.role || user.role.name != 'superprof') return res.accessDenied('You are not allowed to do that');
+        if (!user.role || !user.role.add_branch) return res.accessDenied('You are not allowed to do that');
 
         // If user is NOT superadmin he has tree
         if (!user.tree) return res.accessDenied('You have no tree!');

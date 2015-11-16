@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
         if (err) return res.unauthorized();
 
         // Check if user have permission to add user to branch
-        if (!user.role.add_branch) return res.accessDenied('You are not allowed to do that');
+        if (!user.role.add_student && user.role.name != 'superadmin') return res.accessDenied('You are not allowed to do that');
 
         next();
     });

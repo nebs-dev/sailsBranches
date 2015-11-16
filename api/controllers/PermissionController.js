@@ -15,7 +15,6 @@ module.exports = {
      */
     add: function (req, res) {
         var params = req.params.all();
-
         if (!params.user_id || !params.branch_id) return res.customBadRequest('Missing Parameters.');
 
         var data = {
@@ -23,9 +22,13 @@ module.exports = {
             branch: params.branch_id
         };
 
-        Permission.create(data).then(function (permission) {
+        // First check if this permission already exist.
+        Permission.findOne({user: params.user_id, branch: params.branch_id}).then(function (permission) {
+            if (permission) return res.customBadRequest('Already added');
 
-            return res.json(permission);
+            Permission.create(data).then(function (permission) {
+                return res.json(permission);
+            });
 
         }).catch(function (err) {
             return res.negotiate(err);
@@ -40,13 +43,10 @@ module.exports = {
      */
     remove: function (req, res) {
         var params = req.params.all();
-
         if (!params.user_id || !params.branch_id) return res.customBadRequest('Missing Parameters.');
 
         Permission.destroy({where: {user: params.user_id, branch: params.branch_id}}).then(function () {
-
-            return res.json('OK');
-
+            return res.json('Destroyed');
         }).catch(function (err) {
             return res.negotiate(err);
         });

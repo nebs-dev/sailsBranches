@@ -48,7 +48,7 @@ module.exports.policies = {
     },
 
     'PermissionController': {
-        'add': ['tokenAuth', 'ownBranch'],
+        'add': ['tokenAuth', 'branchActions'],
         'remove': ['tokenAuth', 'branchActions'],
         '*': true
     },
