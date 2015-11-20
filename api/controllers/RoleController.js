@@ -33,6 +33,21 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
+    },
+
+    /**
+     * Update role
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var params = req.params.all();
+
+        Role.update(req.params.id, params).then(function(role) {
+            return res.json(role);
+        }).catch(function (err) {
+           return res.negotiate(err);
+        });
     }
 
 };

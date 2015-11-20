@@ -126,6 +126,16 @@ module.exports.routes = {
      */
     'POST /api/role/create': 'Role.create',
 
+    /**
+     * @api {post} /api/role/update update
+     * @apiGroup Role
+     *
+     * @apiParam {string} name Role name
+     * @apiParam {boolean} add_branch Permission to add branch
+     * @apiParam {boolean} add_student Permission to add students to branch
+     */
+    'POST /api/role/update/:id': 'Role.update',
+
     ////////////////////////////
     ////////// BRANCH //////////
     ////////////////////////////
@@ -163,6 +173,12 @@ module.exports.routes = {
      */
     'POST /api/branch/update/:id': 'Branch.update',
 
+    /**
+     * @api {post} /api/branch/destroy/:id destroy
+     * @apiGroup Branch
+     */
+    'POST /api/branch/destroy/:id': 'Branch.destroy',
+
     //////////////////////////////////
     ////////// PERMISSSIONS //////////
     //////////////////////////////////
@@ -199,6 +215,18 @@ module.exports.routes = {
      */
     'POST /api/licence/create': 'Licence.create',
 
+    /**
+     * @api {post} /api/licence/update update
+     * @apiGroup Licence
+     *
+     * @apiParam {string} name Licence name
+     * @apiParam {integer} vertical vertical levels
+     * @apiParam {integer} horizontal horizontal branches per level
+     * @apiParam {float} price horizontal Licence price
+     * @apiParam {boolean} status Licence status - active/inactive (true/false)
+     */
+    'POST /api/licence/update/:id': 'Licence.update',
+
     //////////////////////////
     ////////// TREE //////////
     //////////////////////////
@@ -209,6 +237,12 @@ module.exports.routes = {
      * @apiParam {string} name Tree name (required)
      */
     'POST /api/tree/create': 'Tree.create',
+
+    /**
+     * @api {post} /api/tree/destroy destroy
+     * @apiGroup Tree
+     */
+    'POST /api/tree/destroy/:id': 'Tree.destroy',
 
     /**
      * @api {post} /api/tree/addLicence add Licence to Tree

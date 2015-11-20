@@ -132,6 +132,16 @@
   },
   {
     "type": "post",
+    "url": "/api/branch/destroy/:id",
+    "title": "destroy",
+    "group": "Branch",
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "Branch",
+    "name": "PostApiBranchDestroyId"
+  },
+  {
+    "type": "post",
     "url": "/api/branch/update/:id",
     "title": "update",
     "group": "Branch",
@@ -287,6 +297,57 @@
   },
   {
     "type": "post",
+    "url": "/api/licence/update",
+    "title": "update",
+    "group": "Licence",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>string</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Licence name</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "vertical",
+            "description": "<p>vertical levels</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>integer</p> ",
+            "optional": false,
+            "field": "horizontal",
+            "description": "<p>horizontal branches per level</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>float</p> ",
+            "optional": false,
+            "field": "price",
+            "description": "<p>horizontal Licence price</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>boolean</p> ",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Licence status - active/inactive (true/false)</p> "
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "Licence",
+    "name": "PostApiLicenceUpdate"
+  },
+  {
+    "type": "post",
     "url": "/api/permission/add",
     "title": "add",
     "group": "Permission",
@@ -380,6 +441,43 @@
   },
   {
     "type": "post",
+    "url": "/api/role/update",
+    "title": "update",
+    "group": "Role",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>string</p> ",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Role name</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>boolean</p> ",
+            "optional": false,
+            "field": "add_branch",
+            "description": "<p>Permission to add branch</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>boolean</p> ",
+            "optional": false,
+            "field": "add_student",
+            "description": "<p>Permission to add students to branch</p> "
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "Role",
+    "name": "PostApiRoleUpdate"
+  },
+  {
+    "type": "post",
     "url": "/api/tree/addLicence",
     "title": "add Licence to Tree",
     "group": "Tree",
@@ -430,6 +528,16 @@
     "filename": "config/routes.js",
     "groupTitle": "Tree",
     "name": "PostApiTreeCreate"
+  },
+  {
+    "type": "post",
+    "url": "/api/tree/destroy",
+    "title": "destroy",
+    "group": "Tree",
+    "version": "0.0.0",
+    "filename": "config/routes.js",
+    "groupTitle": "Tree",
+    "name": "PostApiTreeDestroy"
   },
   {
     "type": "get",

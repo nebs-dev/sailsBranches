@@ -60,7 +60,6 @@ module.exports = {
                 });
             }
         });
-
     },
 
     /**
@@ -106,8 +105,8 @@ module.exports = {
             if (err) return res.negotiate(err);
             if (!file) return res.notFound();
 
-            // User has no avatar image uploaded.
-            // (should have never have hit this endpoint and used the default image)
+            // File object has no file uploaded
+            // (should have never have hit this endpoint)
             if (!file.url) {
                 return res.notFound();
             }

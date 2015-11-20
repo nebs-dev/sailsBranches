@@ -156,6 +156,22 @@ module.exports = {
         }).catch(function (err) {
             cb(err);
         });
+    },
+
+    /**
+     * Destroy permissions for Branch after destroying it
+     * @param destroyedRecords
+     * @param cb
+     * @returns {*}
+     */
+    afterDestroy: function (destroyedRecords, cb) {
+        if (!destroyedRecords.length) return cb();
+
+        Permission.destroy({branch: destroyedRecords[0].id}).then(function () {
+            return cb();
+        }).catch(function (err) {
+           return cb(err);
+        });
     }
 
 };

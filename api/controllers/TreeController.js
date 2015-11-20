@@ -54,6 +54,19 @@ module.exports = {
                 return res.json(tree);
             });
         });
+    },
+
+    /**
+     * Destroy Tree
+     * @param req
+     * @param res
+     */
+    destroy: function (req, res) {
+        Tree.destroy(req.params.id).then(function () {
+            return res.ok();
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     }
 
 };

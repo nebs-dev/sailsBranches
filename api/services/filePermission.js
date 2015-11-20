@@ -9,6 +9,7 @@ module.exports = {
             if (user.role && user.role.name == 'superadmin') return cb();
 
             File.findOne(file_id).populate('branches').then(function (file) {
+                if (!file) return callback({err: "file not found"});
 
                 // Check if user have permission for this branch
                 var permittedBranches = _.pluck(user.permissions, 'branch');

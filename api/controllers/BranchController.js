@@ -61,6 +61,19 @@ module.exports = {
       }).catch(function (err) {
          return res.negotiate(err);
       });
+    },
+
+    /**
+     * Destroy Branch
+     * @param req
+     * @param res
+     */
+    destroy: function (req, res) {
+        Branch.destroy(req.params.id).then(function () {
+            return res.ok();
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     }
 
 };

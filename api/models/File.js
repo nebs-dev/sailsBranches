@@ -32,7 +32,15 @@ module.exports = {
         }
     },
 
+    /**
+     * Remove file after object File destroyed
+     * @param destroyedRecords
+     * @param cb
+     * @returns {*}
+     */
     afterDestroy: function (destroyedRecords, cb) {
+        if (!destroyedRecords.length) return cb();
+
         var filePath = 'uploads/files/' + destroyedRecords[0].url;
 
         fs.remove(filePath, function (err) {

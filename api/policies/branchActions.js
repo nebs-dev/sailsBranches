@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
 
     // Check if user have permission to access this branch
     branchPermission.checkPermission(req.token.userId, params.branch, function (err, user, branch) {
-        if (err) return res.unauthorized();
+        if (err) return res.unauthorized(err.err);
 
         // Check if user have permission to add user to branch
         if (!user.role.add_student && user.role.name != 'superadmin') return res.accessDenied('You are not allowed to do that');

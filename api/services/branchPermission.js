@@ -9,6 +9,7 @@ module.exports = {
             if (user.role && user.role.name == 'superadmin') return callback(null, user, null);
 
             Branch.findOne(branch_id).then(function (branch) {
+                if (!branch) return callback({err: "branch not found"});
 
                 // Check if user have permission for this branch
                 var permittedBranches = _.pluck(user.permissions, 'branch');

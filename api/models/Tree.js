@@ -33,6 +33,22 @@ module.exports = {
             collection: 'file',
             via: 'tree'
         }
+    },
+
+    /**
+     * Destroy all branches && files in this Tree
+     * @param destroyedRecords
+     * @param cb
+     */
+    afterDestroy: function (destroyedRecords, cb) {
+        Branch.destroy({tree: destroyedRecords[0].id}).then(function () {
+            File.destroy({tree: destroyedRecords[0].id}).then(function () {
+               return cb();
+            });
+        }).catch(function (err) {
+            return cb(err);
+        });
     }
+
 };
 

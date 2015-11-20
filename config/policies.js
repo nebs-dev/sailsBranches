@@ -44,6 +44,7 @@ module.exports.policies = {
     'BranchController': {
         'view': ['tokenAuth', 'branchAccess'],
         'create': ['tokenAuth', 'branchCreate'],
+        'destroy': ['tokenAuth', 'branchDestroy'],
         '*': true
     },
 
