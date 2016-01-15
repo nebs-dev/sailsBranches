@@ -118,7 +118,7 @@ module.exports = {
      */
     validPassword: function (password, user, cb) {
         bcrypt.compare(password, user.encryptedPassword, function (err, match) {
-            if (err) cb(err);
+            if (err) return cb(err);
 
             if (match) {
                 cb(null, true);

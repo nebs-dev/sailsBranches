@@ -1,0 +1,15 @@
+{
+  "apps": [
+    {
+      "name": "obris-DEV",
+      "script": "app.js",
+      "watch": false,
+      "env": {
+        "NODE_ENV": "development",
+        "DB_NAME": "obris",
+        "TOKEN_SECRET": "The answer is: GIANT 42! NINJA",
+        "PORT": 1001
+      }
+    }
+  ]
+}

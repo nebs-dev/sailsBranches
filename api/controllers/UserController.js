@@ -96,7 +96,7 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
-    },
+    }
 
 };
 
