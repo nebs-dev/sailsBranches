@@ -29,6 +29,11 @@ module.exports = {
         branches: {
             collection: 'branch',
             via: 'files'
+        },
+
+        toJSON: function () {
+            var obj = this.toObject();
+            return obj;
         }
     },
 

@@ -80,7 +80,7 @@ module.exports.routes = {
      */
     'GET /api/users': 'User.list',
 
-    'POST /api/user/show/:id': 'User.show',
+    'GET /api/user/show/:id': 'User.show',
 
     /**
      * @api {post} /api/user/update/:id update

@@ -26,7 +26,7 @@ module.exports = {
      * @param res
      */
     show: function (req, res) {
-        User.findOne(req.params.id).then(function (user) {
+        User.findOne(req.params.id).populateAll().then(function (user) {
             if (!user) return res.notFound();
             return res.json(user);
 

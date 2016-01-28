@@ -1,7 +1,7 @@
 /**
  * BranchController
  *
- * @description :: Server-side logic for managing branchs
+ * @description :: Server-side logic for managing branches
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
@@ -13,8 +13,51 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        Branch.find().then(function (branches) {
-            return res.json(branches);
+        var allBranches = [];
+
+        User.findOne(req.token.userId).populate('permissions').then(function (user) {
+
+            var children = _.pluck(user.permissions, 'branch');
+
+            async.until(function() {
+                return !children.length;
+            }, function(callback) {
+                Branch.find(children).populate('children').then(function (branches) {
+
+                    var allChildren = [];
+
+                    _.each(branches, function(branch) {
+                        var branchToJSON = branch.toJSON();
+                        branchToJSON.children = _.pluck(branchToJSON.children, 'id');
+                        allBranches.push(branchToJSON);
+                        allChildren = allChildren.concat(branchToJSON.children);
+                    });
+
+                    children = allChildren;
+                    return callback(null);
+
+                }).catch(function(err) {
+                    return callback(err);
+                });
+
+            }, function(err){
+                var levels = _.toArray(_.groupBy(allBranches, 'level'));
+
+                for(var levelNo=levels.length-2; levelNo>=0; levelNo--) {
+                    _.each(levels[levelNo], function(level) {
+                        _.each(level.children, function(child, key) {
+                            var childFound = _.findWhere(allBranches, {parent: level.id});
+                            level.children[key] = childFound;
+                            if(childFound) delete childFound.parent;
+                        });
+                    });
+                }
+
+
+                res.json(levels[0]);
+            });
+
+
         }).catch(function (err) {
             return res.json(err);
         });
@@ -46,7 +89,7 @@ module.exports = {
         Branch.update(req.params.id, params).then(function (branch) {
             return res.json(branch);
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 
@@ -56,11 +99,11 @@ module.exports = {
      * @param res
      */
     view: function (req, res) {
-      Branch.findOne(req.params.id).then(function (branch) {
-          return res.json(branch);
-      }).catch(function (err) {
-         return res.negotiate(err);
-      });
+        Branch.findOne(req.params.id).then(function (branch) {
+            return res.json(branch);
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     },
 
     /**

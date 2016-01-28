@@ -26,6 +26,10 @@ module.exports.policies = {
      *                                                                          *
      ***************************************************************************/
 
+    /**
+     * TODO: Single tree with branches, list all available branches for user
+     */
+
     '*': true,
 
     'UserController': {
@@ -45,6 +49,7 @@ module.exports.policies = {
         'view': ['tokenAuth', 'branchAccess'],
         'create': ['tokenAuth', 'branchCreate'],
         'destroy': ['tokenAuth', 'branchDestroy'],
+        'list': ['tokenAuth'],
         '*': true
     },
 
