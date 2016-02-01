@@ -53,7 +53,6 @@ module.exports = {
                     });
                 }
 
-
                 res.json(levels[0]);
             });
 

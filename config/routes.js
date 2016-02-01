@@ -52,7 +52,7 @@ module.exports.routes = {
     //////////////////////////
     ////////// AUTH //////////
     //////////////////////////
-    /**
+    /*
      * @api {post} /api/auth/login Login
      * @apiGroup Auth
      *
