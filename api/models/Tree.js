@@ -11,8 +11,7 @@ module.exports = {
 
     attributes: {
         name: {
-            type: 'string',
-            unique: true
+            type: 'string'
         },
 
         users: {

@@ -253,6 +253,12 @@ module.exports.routes = {
      */
     'POST /api/tree/addLicence': 'Tree.addLicence',
 
+    /**
+     * @api {get} /api/tree/show show single Tree
+     * @apiGroup Tree
+     */
+    'GET /api/tree/show/:id': 'Tree.show',
+
     ///////////////////////////////////
     ////////// FILE CATEGORY //////////
     ///////////////////////////////////

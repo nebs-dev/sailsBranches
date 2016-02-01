@@ -41,7 +41,7 @@ module.exports = {
                 Licence.findOne(params.licence).exec(cb);
             }
 
-        }, function(err, result) {
+        }, function (err, result) {
             if (err) return res.negotiate(err);
 
             var tree = result.tree;
@@ -53,6 +53,19 @@ module.exports = {
 
                 return res.json(tree);
             });
+        });
+    },
+
+    /**
+     * Single tree
+     * @param req
+     * @param res
+     */
+    show: function (req, res) {
+        Tree.findOne(req.params.id).populate('users').then(function (tree) {
+            return res.json(tree);
+        }).catch(function (err) {
+            return res.negotiate(err);
         });
     },
 

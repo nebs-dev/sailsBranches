@@ -38,6 +38,7 @@ module.exports.policies = {
         'create': true,
         'addRole': ['tokenAuth', 'isSuperadmin'],
         'addTree': ['tokenAuth', 'isSuperadmin'],
+        'list': ['tokenAuth', 'isSuperadmin'],
         '*': false
     },
 
@@ -64,7 +65,8 @@ module.exports.policies = {
     },
 
     'TreeController': {
-        '*': ['tokenAuth', 'isSuperadmin']
+        '*': ['tokenAuth', 'isSuperadmin'],
+        'show': ['tokenAuth']
     },
 
     'FileController': {
