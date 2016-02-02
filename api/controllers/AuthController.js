@@ -42,10 +42,23 @@ module.exports = {
             // Find role "superprof"
             Role.findOne({name: 'superprof'}).then(function (role) {
                 // Create user in tree && add role to him
-                User.create({role: role.id, tree: tree.id, email: params.email, password: params.password}).then(function (user) {
+                User.create({
+                    role: role.id,
+                    tree: tree.id,
+                    email: params.email,
+                    password: params.password
+                }).then(function (user) {
 
                     var token = sailsTokenAuth.issueToken({userId: user.id, secret: user.secret});
                     return res.json({user: user, tree: tree, token: token});
+
+                }).catch(function (error) {
+                    tree.destroy(function (err) {
+                        if (err) return res.negotiate(err);
+
+                        return res.negotiate(error);
+                    });
+
                 });
             });
         }).catch(function (err) {

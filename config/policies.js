@@ -26,16 +26,16 @@ module.exports.policies = {
      *                                                                          *
      ***************************************************************************/
 
-    /**
-     * TODO: Single tree with branches, list all available branches for user
-     */
-
     '*': true,
+
+    AuthController: {
+        'register': true
+    },
 
     'UserController': {
         'show': ['tokenAuth', 'ownUser'],
         'update': ['tokenAuth', 'ownUser'],
-        'create': true,
+        'create': ['tokenAuth', 'userCRUD', 'isSuperprof'],
         'addRole': ['tokenAuth', 'isSuperadmin'],
         'addTree': ['tokenAuth', 'isSuperadmin'],
         'list': ['tokenAuth', 'isSuperadmin'],

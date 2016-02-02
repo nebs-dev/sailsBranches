@@ -33,11 +33,11 @@ module.exports.routes = {
      ***************************************************************************/
 
 
-    'GET /*': {
-        view: 'homepage',
-        skipAssets: true,
-        skipRegex: [/^\/api\/.*$/, /^\/docs\/.*$/]
-    },
+    //'GET /*': {
+    //    view: 'homepage',
+    //    skipAssets: true,
+    //    skipRegex: [/^\/api\/.*$/, /^\/docs\/.*$/]
+    //},
 
     /***************************************************************************
      *                                                                          *
@@ -80,16 +80,31 @@ module.exports.routes = {
      */
     'GET /api/users': 'User.list',
 
+    /**
+     * @api {get} /api/user/:id User data
+     * @apiGroup User
+     */
     'GET /api/user/show/:id': 'User.show',
 
     /**
      * @api {post} /api/user/update/:id update
      * @apiGroup User
      *
-     * @apiParam {string} email User email
+     * @apiParam {email} email User email
      * @apiParam {string} password User password
      */
     'POST /api/user/update/:id': 'User.update',
+
+    /**
+     * @api {post} /api/user/create create
+     * @apiGroup User
+     *
+     * @apiParam {email} email User email (required)
+     * @apiParam {string} password User password (required)
+     * @apiParam {string} confirmPassword confirm User password (required)
+     * @apiParam {string} tree tree ID (required)
+     */
+    'POST /api/user/create': 'User.create',
 
     /**
      * @api {post} /api/user/addRole add Role to User

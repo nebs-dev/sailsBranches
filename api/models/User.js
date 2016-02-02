@@ -13,9 +13,8 @@ module.exports = {
 
     attributes: {
         email: {
-            type: 'string',
-            required: true,
-            unique: true
+            type: 'email',
+            required: true
         },
 
         encryptedPassword: {
@@ -126,6 +125,23 @@ module.exports = {
                 cb(err);
             }
         });
+    },
+
+    /**
+     * After user destroy
+     * @param destroyedRecords
+     * @param cb
+     */
+    afterDestroy: function (destroyedRecords, cb) {
+        if (!destroyedRecords.length) return cb();
+
+        Permission.destroy({user: destroyedRecords[0].id}).then(function () {
+            return cb();
+
+        }).catch(function (err) {
+            return cb(err);
+        });
     }
+
 };
 

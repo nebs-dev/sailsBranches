@@ -36,6 +36,21 @@ module.exports = {
     },
 
     /**
+     * Create user
+     * @param req
+     * @param res
+     */
+    create: function (req, res) {
+        var params = req.params.all();
+
+        User.create(params).then(function (user) {
+            return res.ok(user);
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
      * Update user
      * @param req
      * @param res

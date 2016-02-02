@@ -1,0 +1,14 @@
+{
+  "title": "Obris documentation",
+  "version": "0.1.0",
+  "name": "obris",
+  "description": "a Sails application",
+  "sampleUrl": false,
+  "apidoc": "0.2.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2016-02-02T07:57:05.965Z",
+    "url": "http://apidocjs.com",
+    "version": "0.14.0"
+  }
+}
