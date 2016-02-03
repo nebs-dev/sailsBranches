@@ -48,8 +48,8 @@ module.exports = {
             required: true
         },
 
-        files: {
-            collection: 'file',
+        media: {
+            collection: 'media',
             via: 'branches'
         }
     },

@@ -1,5 +1,5 @@
 /**
- * FileController
+ * MediaController
  *
  * @description :: Server-side logic for managing files
  * @help        :: See http://links.sailsjs.org/docs/controllers
@@ -9,7 +9,7 @@ var path = require('path');
 module.exports = {
 
     /**
-     * Upload file
+     * Upload Media
      * @param req
      * @param res
      */
@@ -33,17 +33,19 @@ module.exports = {
 
             // If branch is set use its tree
             if (params.branch) {
-                Branch.findOne(params.branch).populate('files').then(function (branch) {
+                Branch.findOne(params.branch).populate('media').then(function (branch) {
                     params.branch = branch.id;
                     params.tree = branch.tree;
 
-                    // Create file object with path to uploaded file
-                    File.create(params).then(function (file) {
+                    // Create Media object with path to uploaded Media
+                    Media.create(params).then(function (media) {
 
-                        file.branches.add(branch);
-                        file.save();
+                        media.branches.add(branch);
+                        Media.save(function (err, media) {
+                            if (err) return res.negotiate(err);
 
-                        return res.json(file);
+                            return res.json(media);
+                        });
 
                     }).catch(function (err) {
                         return res.negotiate(err);
@@ -52,9 +54,9 @@ module.exports = {
 
             // If branch is NOT set, use tree from params
             } else {
-                // Create file object with path to uploaded file
-                File.create(params).then(function (file) {
-                    return res.json(file);
+                // Create mdia object with path to uploaded media
+                Media.create(params).then(function (media) {
+                    return res.json(media);
                 }).catch(function (err) {
                     return res.negotiate(err);
                 });
@@ -63,27 +65,27 @@ module.exports = {
     },
 
     /**
-     * Create file
+     * Create media
      * @param req
      * @param res
      */
     create: function (req, res) {
         var params = req.params.all();
 
-        File.create(params).then(function (file) {
-            return res.json(file);
+        Media.create(params).then(function (media) {
+            return res.json(media);
         }).catch(function (err) {
             return res.negotiate(err);
         });
     },
 
     /**
-     * Destroy file
+     * Destroy media
      * @param req
      * @param res
      */
     destroy: function (req, res) {
-        File.destroy(req.params.id).then(function () {
+        Media.destroy(req.params.id).then(function () {
             return res.ok();
         }).catch(function (err) {
             return res.negotiate(err);
@@ -92,7 +94,7 @@ module.exports = {
 
 
     /**
-     * Get one file
+     * Get one media
      * @param req
      * @param res
      */
@@ -101,21 +103,21 @@ module.exports = {
             id: 'string'
         });
 
-        File.findOne(req.param('id')).exec(function (err, file){
+        Media.findOne(req.param('id')).exec(function (err, media){
             if (err) return res.negotiate(err);
-            if (!file) return res.notFound();
+            if (!media) return res.notFound();
 
-            // File object has no file uploaded
+            // Media object has no media uploaded
             // (should have never have hit this endpoint)
-            if (!file.url) {
+            if (!media.url) {
                 return res.notFound();
             }
 
             var SkipperDisk = require('skipper-disk');
             var fileAdapter = SkipperDisk(/* optional opts */);
 
-            // Stream the file down
-            fileAdapter.read('uploads/files/' + file.url)
+            // Stream the media down
+            fileAdapter.read('uploads/media/' + media.url)
                 .on('error', function (err){
                     return res.serverError(err);
                 })
@@ -124,15 +126,15 @@ module.exports = {
     },
 
     /**
-     * Get all files from one Branch
+     * Get all media from one Branch
      * @param req
      * @param res
      */
     getByBranch: function (req, res) {
         var params = req.params.all();
 
-        Branch.findOne(params.id).populate('files').then(function (branch) {
-            return res.json(branch.files);
+        Branch.findOne(params.id).populate('media').then(function (branch) {
+            return res.json(branch.media);
         }).catch(function (err) {
            return res.negotiate(err);
         });

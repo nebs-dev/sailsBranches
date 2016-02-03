@@ -1,5 +1,5 @@
 /**
- * FileCategory.js
+ * MediaCategory.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
@@ -16,8 +16,8 @@ module.exports = {
             unique: true
         },
 
-        branches: {
-            collection: 'file',
+        media: {
+            collection: 'media',
             via: 'category'
         }
     },
@@ -31,7 +31,7 @@ module.exports = {
     afterDestroy: function (destroyedRecords, cb) {
         var category = destroyedRecords[0];
 
-        File.destroy({category: category.id}).then(function () {
+        Media.destroy({category: category.id}).then(function () {
             cb();
         }).catch(function (err) {
            cb(err);

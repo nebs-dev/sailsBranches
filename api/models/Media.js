@@ -1,5 +1,5 @@
 /**
- * File.js
+ * Media.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/#!documentation/models
@@ -18,7 +18,7 @@ module.exports = {
         },
 
         category: {
-            model: 'fileCategory'
+            model: 'mediaCategory'
         },
 
         tree: {
@@ -28,7 +28,7 @@ module.exports = {
 
         branches: {
             collection: 'branch',
-            via: 'files'
+            via: 'media'
         },
 
         toJSON: function () {
@@ -38,7 +38,7 @@ module.exports = {
     },
 
     /**
-     * Remove file after object File destroyed
+     * Remove media after object File destroyed
      * @param destroyedRecords
      * @param cb
      * @returns {*}
@@ -46,7 +46,7 @@ module.exports = {
     afterDestroy: function (destroyedRecords, cb) {
         if (!destroyedRecords.length) return cb();
 
-        var filePath = 'uploads/files/' + destroyedRecords[0].url;
+        var filePath = 'uploads/media/' + destroyedRecords[0].url;
 
         fs.remove(filePath, function (err) {
             if (err) return cb(err);

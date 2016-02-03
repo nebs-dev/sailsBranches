@@ -275,60 +275,60 @@ module.exports.routes = {
      */
     'GET /api/tree/show/:id': 'Tree.show',
 
-    ///////////////////////////////////
-    ////////// FILE CATEGORY //////////
-    ///////////////////////////////////
+    ////////////////////////////////////
+    ////////// MEDIA CATEGORY //////////
+    ////////////////////////////////////
     /**
-     * @api {get} /api/fileCategories list
-     * @apiGroup fileCategories
+     * @api {get} /api/mediaCategories list
+     * @apiGroup mediaCategories
      */
-    'GET /api/fileCategories': 'FileCategory.list',
+    'GET /api/mediaCategories': 'MediaCategory.list',
 
     /**
-     * @api {post} /api/fileCategories/create create
-     * @apiGroup fileCategories
+     * @api {post} /api/mediaCategories/create create
+     * @apiGroup mediaCategories
      *
-     * @apiParam {string} name fileCategories name (required)
+     * @apiParam {string} name mediaCategories name (required)
      */
-    'POST /api/fileCategory/create': 'FileCategory.create',
+    'POST /api/mediaCategory/create': 'MediaCategory.create',
 
     /**
-     * @api {post} /api/fileCategory/destroy/:id destroy
-     * @apiGroup fileCategories
+     * @api {post} /api/mediaCategory/destroy/:id destroy
+     * @apiGroup mediaCategories
      */
-    'POST /api/fileCategory/destroy/:id': 'FileCategory.destroy',
+    'POST /api/mediaCategory/destroy/:id': 'MediaCategory.destroy',
 
-    //////////////////////////
-    ////////// FILE //////////
-    //////////////////////////
-    'POST /api/file/create': 'File.create',
+    ///////////////////////////
+    ////////// MEDIA //////////
+    ///////////////////////////
+    'POST /api/media/create': 'Media.create',
 
     /**
-     * @api {post} /api/file/destroy/:id destroy
-     * @apiGroup File
+     * @api {post} /api/media/destroy/:id destroy
+     * @apiGroup Media
      */
-    'POST /api/file/destroy/:id': 'File.destroy',
+    'POST /api/media/destroy/:id': 'Media.destroy',
 
     /**
-     * @api {post} /api/file/upload upload
-     * @apiGroup File
+     * @api {post} /api/media/upload upload
+     * @apiGroup Media
      *
-     * @apiParam {file} fileToUpload file to upload (required)
-     * @apiParam {integer} tree Tree ID (required)
-     * @apiParam {integer} branch Branch ID
+     * @apiParam {file} fileToUpload media to upload (required)
+     * @apiParam {integer} tree Tree ID (required if !branch)
+     * @apiParam {integer} branch Branch ID (required if !tree)
      */
-    'POST /api/file/upload': 'File.upload',
+    'POST /api/media/upload': 'Media.upload',
 
     /**
-     * @api {get} /api/file/get/:id get one
-     * @apiGroup File
+     * @api {get} /api/media/get/:id get one
+     * @apiGroup Media
      */
-    'GET /api/file/get/:id': 'File.getOne',
+    'GET /api/media/get/:id': 'Media.getOne',
 
     /**
-     * @api {get} /api/file/getByBranch/:id get all Files in Branch
-     * @apiGroup File
+     * @api {get} /api/media/getByBranch/:id get all Files in Branch
+     * @apiGroup Media
      */
-    'GET /api/file/getByBranch/:id': 'File.getByBranch'
+    'GET /api/media/getByBranch/:id': 'Media.getByBranch'
 
 };
