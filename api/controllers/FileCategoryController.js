@@ -1,7 +1,7 @@
 /**
  * FileCategoryController
  *
- * @description :: Server-side logic for managing filecategories
+ * @description :: Server-side logic for managing file categories
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
