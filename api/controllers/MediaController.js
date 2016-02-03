@@ -21,7 +21,7 @@ module.exports = {
         req.file('fileToUpload').upload({
             // don't allow the total upload size to exceed ~10MB
             maxBytes: 10000000,
-            dirname: sails.config.appPath + '/uploads/files/'
+            dirname: sails.config.appPath + '/uploads/media/'
 
         }, function whenDone(err, uploadedFiles) {
             if (err) return res.negotiate(err);
@@ -41,7 +41,7 @@ module.exports = {
                     Media.create(params).then(function (media) {
 
                         media.branches.add(branch);
-                        Media.save(function (err, media) {
+                        media.save(function (err, media) {
                             if (err) return res.negotiate(err);
 
                             return res.json(media);
@@ -54,7 +54,7 @@ module.exports = {
 
             // If branch is NOT set, use tree from params
             } else {
-                // Create mdia object with path to uploaded media
+                // Create media object with path to uploaded media
                 Media.create(params).then(function (media) {
                     return res.json(media);
                 }).catch(function (err) {

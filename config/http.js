@@ -15,6 +15,7 @@ module.exports.http = {
 
     customMiddleware: function (app) {
         app.use('/docs', express.static(sails.config.appPath + '/docs'));
+        app.use('/uploads', express.static(sails.config.appPath + '/uploads'));
     }
 
     /****************************************************************************

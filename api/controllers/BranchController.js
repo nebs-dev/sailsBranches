@@ -22,7 +22,7 @@ module.exports = {
             async.until(function() {
                 return !children.length;
             }, function(callback) {
-                Branch.find(children).populate('children').then(function (branches) {
+                Branch.find(children).populate('children').populate('media').then(function (branches) {
 
                     var allChildren = [];
 
