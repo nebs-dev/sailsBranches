@@ -93,15 +93,23 @@ module.exports = {
         var children = [];
         children.push(req.params.id);
 
+        // Get branch && its children in save level
         branchService.list(children, false, function (err, branches) {
             if (err) return res.negotiate(err);
 
+            // Get permissions for every branch
             var branchIds = _.pluck(branches, 'id');
             Permission.find({branch: branchIds}).then(function (permissions) {
-                var userIds = _.pluck(permissions, 'user');
 
-                User.find(userIds).then(function (users) {
-                    return res.ok(users);
+                // Get users from branches permissions
+                var userIds = _.pluck(permissions, 'user');
+                User.find(userIds).populate('role').then(function (users) {
+
+                    // Get only users with role 'student'
+                    var students = _.filter(users, function (user) {
+                        return user.role.name == 'student';
+                    });
+                    return res.ok(students);
                 });
 
             }).catch(function (err) {

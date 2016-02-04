@@ -186,7 +186,7 @@ module.exports.routes = {
      * @apiGroup Branch
      *
      * @apiParam {string} name Branch name
-     * @apiParam {integer} user parent Branch ID
+     * @apiParam {integer} branch parent Branch ID
      * @apiParam {integer} user Branch creator ID (superadmin)
      * @apiParam {integer} tree Tree ID (superadmin)
      */
