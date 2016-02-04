@@ -8,7 +8,7 @@
 module.exports = {
 
     /**
-     * List all branches
+     * List all branches && children
      * @param req
      * @param res
      */
@@ -48,7 +48,7 @@ module.exports = {
                         _.each(level.children, function(child, key) {
                             var childFound = _.findWhere(allBranches, {parent: level.id});
                             level.children[key] = childFound;
-                            if(childFound) delete childFound.parent;
+                            //if(childFound) delete childFound.parent;
                         });
                     });
                 }
