@@ -48,7 +48,7 @@ module.exports = {
                         _.each(level.children, function(child, key) {
                             var childFound = _.findWhere(allBranches, {parent: level.id});
                             level.children[key] = childFound;
-                            //if(childFound) delete childFound.parent;
+                            if(childFound) delete childFound.parent;
                         });
                     });
                 }
@@ -116,7 +116,12 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
-    }
+    },
+
+
+    //getStudents: function (req, res) {
+    //
+    //}
 
 };
 

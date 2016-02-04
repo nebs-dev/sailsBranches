@@ -104,6 +104,7 @@ module.exports.routes = {
      * @apiParam {string} password User password (required)
      * @apiParam {string} confirmPassword confirm User password (required)
      * @apiParam {string} tree tree ID (required)
+     * @apiParam {string} role role ID (required)
      */
     'POST /api/user/create': 'User.create',
 
@@ -139,6 +140,8 @@ module.exports.routes = {
      * @apiGroup Role
      *
      * @apiParam {string} name Role name (required)
+     * @apiParam {boolean} add_branch Permission to add branch (required)
+     * @apiParam {boolean} add_student Permission to add students to branch (required)
      */
     'POST /api/role/create': 'Role.create',
 

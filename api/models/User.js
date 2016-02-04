@@ -27,7 +27,8 @@ module.exports = {
         },
 
         role: {
-            model: 'role'
+            model: 'role',
+            required: true
         },
 
         branches: {

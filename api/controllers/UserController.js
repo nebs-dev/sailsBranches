@@ -13,7 +13,7 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        User.find().populateAll().then(function (users) {
+        User.find().populate('role').then(function (users) {
             return res.json(users);
         }).catch(function (err) {
             return res.negotiate(err);

@@ -159,7 +159,7 @@ module.exports = {
     },
 
     /**
-     * Destroy permissions for Branch after destroying it
+     * Destroy permissions for Branch after destroying it and its children
      * @param destroyedRecords
      * @param cb
      * @returns {*}
@@ -167,10 +167,12 @@ module.exports = {
     afterDestroy: function (destroyedRecords, cb) {
         if (!destroyedRecords.length) return cb();
 
-        Permission.destroy({branch: destroyedRecords[0].id}).then(function () {
-            return cb();
+        Branch.destroy({parent: destroyedRecords[0].id}).then(function () {
+            Permission.destroy({branch: destroyedRecords[0].id}).then(function () {
+                return cb();
+            });
         }).catch(function (err) {
-           return cb(err);
+            return cb(err);
         });
     }
 
