@@ -198,6 +198,12 @@ module.exports.routes = {
      */
     'POST /api/branch/destroy/:id': 'Branch.destroy',
 
+    /**
+     * @api {get} /api/branch/students/:id get students
+     * @apiGroup Branch
+     */
+    'GET /api/branch/students/:id': 'Branch.getStudents',
+
     //////////////////////////////////
     ////////// PERMISSSIONS //////////
     //////////////////////////////////

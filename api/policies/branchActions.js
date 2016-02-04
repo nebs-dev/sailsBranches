@@ -5,7 +5,7 @@ module.exports = function (req, res, next) {
     if (!params.branch) return res.customBadRequest('Missing parameters.');
 
     // Check if user have permission to access this branch
-    branchPermission.checkPermission(req.token.userId, params.branch, function (err, user, branch) {
+    branchService.checkPermission(req.token.userId, params.branch, function (err, user, branch) {
         if (err) return res.unauthorized(err.err);
 
         // Check if user have permission to add user to branch

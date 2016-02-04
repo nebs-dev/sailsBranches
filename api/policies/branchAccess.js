@@ -7,7 +7,7 @@ module.exports = function(req, res, next) {
     var branchId = params.branch ? params.branch : params.id;
 
     // Check if user have permission to access this branch
-    branchPermission.checkPermission(req.token.userId, branchId, function (err, user, branch) {
+    branchService.checkPermission(req.token.userId, branchId, function (err, user, branch) {
         if (err) return res.unauthorized(err.err);
 
         next();

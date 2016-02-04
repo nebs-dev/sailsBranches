@@ -13,49 +13,15 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        var allBranches = [];
-
         User.findOne(req.token.userId).populate('permissions').then(function (user) {
 
             var children = _.pluck(user.permissions, 'branch');
 
-            async.until(function() {
-                return !children.length;
-            }, function(callback) {
-                Branch.find(children).populate('children').populate('media').then(function (branches) {
+            branchService.list(children, true, function (err, branches) {
+                if (err) return res.negotiate(err);
 
-                    var allChildren = [];
-
-                    _.each(branches, function(branch) {
-                        var branchToJSON = branch.toJSON();
-                        branchToJSON.children = _.pluck(branchToJSON.children, 'id');
-                        allBranches.push(branchToJSON);
-                        allChildren = allChildren.concat(branchToJSON.children);
-                    });
-
-                    children = allChildren;
-                    return callback(null);
-
-                }).catch(function(err) {
-                    return callback(err);
-                });
-
-            }, function(err){
-                var levels = _.toArray(_.groupBy(allBranches, 'level'));
-
-                for(var levelNo=levels.length-2; levelNo>=0; levelNo--) {
-                    _.each(levels[levelNo], function(level) {
-                        _.each(level.children, function(child, key) {
-                            var childFound = _.findWhere(allBranches, {parent: level.id});
-                            level.children[key] = childFound;
-                            if(childFound) delete childFound.parent;
-                        });
-                    });
-                }
-
-                res.json(levels[0]);
+                return res.ok(branches);
             });
-
 
         }).catch(function (err) {
             return res.json(err);
@@ -118,10 +84,31 @@ module.exports = {
         });
     },
 
+    /**
+     * Get all students in branch and in its children
+     * @param req
+     * @param res
+     */
+    getStudents: function (req, res) {
+        var children = [];
+        children.push(req.params.id);
 
-    //getStudents: function (req, res) {
-    //
-    //}
+        branchService.list(children, false, function (err, branches) {
+            if (err) return res.negotiate(err);
+
+            var branchIds = _.pluck(branches, 'id');
+            Permission.find({branch: branchIds}).then(function (permissions) {
+                var userIds = _.pluck(permissions, 'user');
+
+                User.find(userIds).then(function (users) {
+                    return res.ok(users);
+                });
+
+            }).catch(function (err) {
+                return res.negotiate(err);
+            });
+        });
+    }
 
 };
 
