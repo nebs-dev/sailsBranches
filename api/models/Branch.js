@@ -123,6 +123,10 @@ module.exports = {
 
             // Get future parent of this updated child
             Branch.findOne(valuesToBeUpdated.parent).then(function (parent) {
+                if (!parent) return cb('Not found');
+
+                // check if updatedChild is parent of new parent - forbid
+                if (_.contains(parent.parents, updatedChild.id)) return cb('Wrong parent');
 
                 // if parent level is 0
                 parent = parent || {};

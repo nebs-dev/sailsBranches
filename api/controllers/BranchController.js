@@ -52,7 +52,21 @@ module.exports = {
         var params = req.params.all();
 
         Branch.update(req.params.id, params).then(function (branch) {
-            return res.json(branch);
+
+            // If parent == '' move branch to the top level
+            console.log(params);
+            if (params.parent && params.parent !== '') return res.ok(branch);
+
+            delete branch[0].parent;
+            branch[0].parents = [];
+            branch[0].level = 0;
+
+            branch[0].save(function (err, branch) {
+                if (err) return res.negotiate(err);
+                return res.ok(branch);
+            })
+
+
         }).catch(function (err) {
             return res.negotiate(err);
         });

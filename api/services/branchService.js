@@ -34,7 +34,12 @@ module.exports = {
     },
 
 
-
+    /**
+     * Get list of branches by IDs
+     * @param children
+     * @param tree
+     * @param cb
+     */
     list: function (children, tree, cb) {
         var allBranches = [];
 
