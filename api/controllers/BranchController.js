@@ -55,7 +55,7 @@ module.exports = {
 
             // If parent == '' move branch to the top level
             console.log(params);
-            if (params.parent && params.parent !== '') return res.ok(branch);
+            if (params.parent && (params.parent !== '' || params.parent !== '0' || params.parent !== 0)) return res.ok(branch);
 
             delete branch[0].parent;
             branch[0].parents = [];
