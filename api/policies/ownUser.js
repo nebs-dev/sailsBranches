@@ -14,6 +14,9 @@ module.exports = function(req, res, next) {
         delete req.body.role;
         delete req.body.licence;
 
-        next();
+        return next();
+
+    }).catch(function (err) {
+        return res.negotiate(err);
     });
 };

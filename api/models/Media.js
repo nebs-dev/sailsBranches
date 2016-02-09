@@ -8,17 +8,46 @@
 var fs = require('fs-extra');
 module.exports = {
 
+    types: {
+        checkType: function (model) {
+            if(this.type !== 'custom') return true;
+
+            var availableModels = generalHelper.getTypeModels();
+            return availableModels.indexOf(model) !== -1 && this.relationKey;
+        }
+    },
+
     schema: true,
 
     attributes: {
 
-        url: {
+        title: {
             type: 'string',
             required: true
         },
 
-        category: {
-            model: 'mediaCategory'
+        url: {
+            type: 'string'
+        },
+
+        relationModel: {
+            type: 'string',
+            checkType: true
+        },
+
+        relationKey: {
+            type: 'string'
+        },
+
+        type: {
+            type: 'string',
+            enum: ['photo', 'video', 'document', 'audio', 'custom'],
+            required: true
+        },
+
+        categories: {
+            collection: 'mediaCategory',
+            via: 'media'
         },
 
         tree: {
@@ -39,7 +68,7 @@ module.exports = {
     },
 
     /**
-     * Remove media after object File destroyed
+     * Remove media after object Media destroyed
      * @param destroyedRecords
      * @param cb
      * @returns {*}

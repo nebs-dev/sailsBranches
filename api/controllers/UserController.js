@@ -28,6 +28,7 @@ module.exports = {
     show: function (req, res) {
         User.findOne(req.params.id).populateAll().then(function (user) {
             if (!user) return res.notFound();
+
             return res.json(user);
 
         }).catch(function (err) {
@@ -78,7 +79,7 @@ module.exports = {
         Role.findOne(params.role).then(function (role) {
 
             role.users.add(params.user);
-            role.save(function (err, role) {
+            role.save(function (err) {
                if (err) return res.negotiate(err);
 
                 return res.json(role);
@@ -102,7 +103,7 @@ module.exports = {
         Tree.findOne(params.tree).then(function (tree) {
 
             tree.users.add(params.user);
-            tree.save(function (err, tree) {
+            tree.save(function (err) {
                 if (err) return res.negotiate(err);
 
                 return res.json(tree);

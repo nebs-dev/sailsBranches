@@ -82,7 +82,7 @@ module.exports.routes = {
     'GET /api/users': 'User.list',
 
     /**
-     * @api {get} /api/user/:id User data
+     * @api {get} /api/user/show/:id User data
      * @apiGroup User
      */
     'GET /api/user/show/:id': 'User.show',
@@ -323,8 +323,8 @@ module.exports.routes = {
      * @apiGroup Media
      *
      * @apiParam {file} fileToUpload media to upload (required)
-     * @apiParam {integer} tree Tree ID (required if !branch)
-     * @apiParam {integer} branch Branch ID (required if !tree)
+     * @apiParam {integer} tree Tree ID (required)
+     * @apiParam {array} branches Branches IDs
      */
     'POST /api/media/upload': 'Media.upload',
 

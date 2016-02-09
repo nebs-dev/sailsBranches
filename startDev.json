@@ -8,7 +8,8 @@
         "NODE_ENV": "development",
         "DB_NAME": "obris",
         "TOKEN_SECRET": "The answer is: GIANT 42! NINJA",
-        "PORT": 1001
+        "PORT": 1337,
+        "BLUEBIRD_W_FORGOTTEN_RETURN": false
       }
     }
   ]

@@ -48,7 +48,7 @@ module.exports = {
             var licence = result.licence;
 
             licence.trees.add(tree);
-            licence.save(function (err, licence) {
+            licence.save(function (err) {
                 if (err) return res.negotiate(err);
 
                 return res.json(tree);

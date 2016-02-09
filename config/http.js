@@ -9,7 +9,7 @@
  * http://sailsjs.org/#/documentation/reference/sails.config/sails.config.http.html
  */
 
-var express = require('sails/node_modules/express');
+var express = require('express');
 
 module.exports.http = {
 

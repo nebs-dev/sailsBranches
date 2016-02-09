@@ -18,7 +18,7 @@ module.exports = {
 
         media: {
             collection: 'media',
-            via: 'category'
+            via: 'categories'
         }
     },
 

@@ -16,7 +16,7 @@ module.exports = {
     upload: function (req, res) {
         var params = req.params.all();
 
-        if (!params.tree && !params.branch) return res.customBadRequest('Missing Parameters.');
+        //if (!params.tree && !params.branch) return res.customBadRequest('Missing Parameters.');
 
         req.file('fileToUpload').upload({
             // don't allow the total upload size to exceed ~10MB
@@ -31,36 +31,50 @@ module.exports = {
 
             params.url = path.basename(uploadedFiles[0].fd);
 
-            // If branch is set use its tree
-            if (params.branch) {
-                Branch.findOne(params.branch).populate('media').then(function (branch) {
-                    params.branch = branch.id;
-                    params.tree = branch.tree;
+            console.log(params);
 
-                    // Create Media object with path to uploaded Media
-                    Media.create(params).then(function (media) {
+            // Create media object and add it to branches from params
+            Media.create(params).then(function (media) {
+                mediaService.saveBranches(media, params.branches, function (err, media) {
+                    if (err) return res.negotiate(err);
 
-                        media.branches.add(branch);
-                        media.save(function (err, media) {
-                            if (err) return res.negotiate(err);
-
-                            return res.json(media);
-                        });
-
-                    }).catch(function (err) {
-                        return res.negotiate(err);
-                    });
+                    return res.ok(media);
                 });
 
-            // If branch is NOT set, use tree from params
-            } else {
-                // Create media object with path to uploaded media
-                Media.create(params).then(function (media) {
-                    return res.json(media);
-                }).catch(function (err) {
-                    return res.negotiate(err);
-                });
-            }
+            }).catch(function (err) {
+                return res.negotiate(err);
+            });
+
+            //// If branch is set use its tree
+            //if (params.branch) {
+            //    Branch.findOne(params.branch).populate('media').then(function (branch) {
+            //        params.branch = branch.id;
+            //        params.tree = branch.tree;
+            //
+            //        // Create Media object with path to uploaded Media
+            //        Media.create(params).then(function (media) {
+            //
+            //            media.branches.add(branch);
+            //            media.save(function (err) {
+            //                if (err) return res.negotiate(err);
+            //
+            //                return res.json(media);
+            //            });
+            //
+            //        }).catch(function (err) {
+            //            return res.negotiate(err);
+            //        });
+            //    });
+            //
+            //// If branch is NOT set, use tree from params
+            //} else {
+            //    // Create media object with path to uploaded media
+            //    Media.create(params).then(function (media) {
+            //        return res.json(media);
+            //    }).catch(function (err) {
+            //        return res.negotiate(err);
+            //    });
+            //}
         });
     },
 
@@ -103,7 +117,7 @@ module.exports = {
             id: 'string'
         });
 
-        Media.findOne(req.param('id')).exec(function (err, media){
+        Media.findOne(req.param('id')).exec(function (err, media) {
             if (err) return res.negotiate(err);
             if (!media) return res.notFound();
 
@@ -118,7 +132,7 @@ module.exports = {
 
             // Stream the media down
             fileAdapter.read('uploads/media/' + media.url)
-                .on('error', function (err){
+                .on('error', function (err) {
                     return res.serverError(err);
                 })
                 .pipe(res);
@@ -136,7 +150,7 @@ module.exports = {
         Branch.findOne(params.id).populate('media').then(function (branch) {
             return res.json(branch.media);
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     }
 

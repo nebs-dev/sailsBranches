@@ -33,6 +33,8 @@ module.exports = function (req, res, next) {
             req.token = token;
             next();
 
+            return null;
+
         }).catch(function (err) {
             if (err) return res.unauthorized(err);
         });

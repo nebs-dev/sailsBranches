@@ -54,16 +54,15 @@ module.exports = {
         Branch.update(req.params.id, params).then(function (branch) {
 
             // If parent == '' move branch to the top level
-            console.log(params);
             if (params.parent && (params.parent !== '' || params.parent !== '0' || params.parent !== 0)) return res.ok(branch);
 
             delete branch[0].parent;
             branch[0].parents = [];
             branch[0].level = 0;
 
-            branch[0].save(function (err, branch) {
+            branch[0].save(function (err) {
                 if (err) return res.negotiate(err);
-                return res.ok(branch);
+                return res.ok(branch[0]);
             })
 
 
