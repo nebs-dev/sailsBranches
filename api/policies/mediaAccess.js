@@ -5,7 +5,7 @@ module.exports = function(req, res, next) {
     if (!req.token || !req.token.userId) return res.accessDenied('You are not allowed to do that');
 
     // Check if user have permission to access this branch
-    filePermission.checkPermission(req.token.userId, params.id, function (err) {
+    mediaService.checkPermission(req.token.userId, params.id, function (err) {
         if (err) return res.unauthorized();
 
         next();

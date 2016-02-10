@@ -338,6 +338,63 @@ module.exports.routes = {
      * @api {get} /api/media/getByBranch/:id get all Files in Branch
      * @apiGroup Media
      */
-    'GET /api/media/getByBranch/:id': 'Media.getByBranch'
+    'GET /api/media/getByBranch/:id': 'Media.getByBranch',
+
+
+    ///////////////////////////
+    ////////// EVENT //////////
+    ///////////////////////////
+
+    /**
+     * @api {post} /api/event/create create
+     * @apiGroup Event
+     *
+     * @apiParam {string} title Event title
+     * @apiParam {date} fromDate event start (required)
+     * @apiParam {date} toDate event end (required)
+     * @apiParam {string} type eventType ID (required)
+     * @apiParam {string} tree tree ID (required if SUPERADMIN)
+     * @apiParam {array} media IDs of media to add
+     * @apiParam {array} branches IDs of branches to add
+     */
+    'POST /api/event/create': 'Event.create',
+
+    /**
+     * @api {get} /api/events list
+     * @apiGroup Event
+     */
+    'GET /api/events': 'Event.list',
+
+    ////////////////////////////////
+    ////////// EVENT TYPE //////////
+    ////////////////////////////////
+
+    /**
+     * @api {post} /api/eventType/create create
+     * @apiGroup EventType
+     *
+     * @apiParam {string} title Event Type title (required)
+     */
+    'POST /api/eventType/create': 'EventType.create',
+
+    /**
+     * @api {post} /api/eventType/update update
+     * @apiGroup EventType
+     *
+     * @apiParam {string} title Event Type title
+     */
+    'POST /api/eventType/update': 'EventType.update',
+
+    /**
+     * @api {post} /api/eventType/destroy destroy
+     * @apiGroup EventType
+     */
+    'POST /api/eventType/destroy': 'EventType.destroy',
+
+    /**
+     * @api {get} /api/eventTypes list
+     * @apiGroup EventType
+     */
+    'GET /api/eventTypes': 'EventType.list'
 
 };

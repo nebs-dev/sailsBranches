@@ -54,6 +54,9 @@ module.exports.bootstrap = function (cb) {
                         var userParams = {
                             'email': 'nebs@gmail.com',
                             'password': 'nebs123',
+                            'firstName': 'Nebojsa',
+                            'lastName': 'Stojanovic',
+                            'mobile': '095 468 4768',
                             'role': superadminRole.id
                         };
 

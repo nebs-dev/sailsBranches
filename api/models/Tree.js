@@ -31,6 +31,11 @@ module.exports = {
         files: {
             collection: 'media',
             via: 'tree'
+        },
+
+        events: {
+            collection: 'event',
+            via: 'tree'
         }
     },
 
@@ -42,7 +47,9 @@ module.exports = {
     afterDestroy: function (destroyedRecords, cb) {
         Branch.destroy({tree: destroyedRecords[0].id}).then(function () {
             Media.destroy({tree: destroyedRecords[0].id}).then(function () {
-               return cb();
+                Event.destroy({tree: destroyedRecords[0].id}).then(function () {
+                    return cb();
+                });
             });
         }).catch(function (err) {
             return cb(err);

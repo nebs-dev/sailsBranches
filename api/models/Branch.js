@@ -51,6 +51,11 @@ module.exports = {
         media: {
             collection: 'media',
             via: 'branches'
+        },
+
+        events: {
+            collection: 'event',
+            via: 'branches'
         }
     },
 

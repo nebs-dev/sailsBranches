@@ -17,6 +17,21 @@ module.exports = {
             required: true
         },
 
+        firstName: {
+            type: 'string',
+            required: true
+        },
+
+        lastName: {
+            type: 'string',
+            required: true
+        },
+
+        mobile: {
+            type: 'string',
+            required: true
+        },
+
         encryptedPassword: {
             type: 'string'
         },

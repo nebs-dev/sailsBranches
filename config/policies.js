@@ -70,13 +70,17 @@ module.exports.policies = {
         'show': ['tokenAuth']
     },
 
-    'FileController': {
-        'getOne': ['tokenAuth', 'fileAccess'],
+    'MediaController': {
+        'getOne': ['tokenAuth', 'mediaAccess'],
         '*': true
     },
 
-    'FileCategoryController': {
+    'MediaCategoryController': {
         '*': ['tokenAuth', 'isSuperadmin']
+    },
+
+    'EventController': {
+        '*': ['tokenAuth']
     }
 
     /***************************************************************************

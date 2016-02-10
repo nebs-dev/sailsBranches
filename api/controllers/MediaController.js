@@ -31,8 +31,6 @@ module.exports = {
 
             params.url = path.basename(uploadedFiles[0].fd);
 
-            console.log(params);
-
             // Create media object and add it to branches from params
             Media.create(params).then(function (media) {
                 mediaService.saveBranches(media, params.branches, function (err, media) {
@@ -44,37 +42,6 @@ module.exports = {
             }).catch(function (err) {
                 return res.negotiate(err);
             });
-
-            //// If branch is set use its tree
-            //if (params.branch) {
-            //    Branch.findOne(params.branch).populate('media').then(function (branch) {
-            //        params.branch = branch.id;
-            //        params.tree = branch.tree;
-            //
-            //        // Create Media object with path to uploaded Media
-            //        Media.create(params).then(function (media) {
-            //
-            //            media.branches.add(branch);
-            //            media.save(function (err) {
-            //                if (err) return res.negotiate(err);
-            //
-            //                return res.json(media);
-            //            });
-            //
-            //        }).catch(function (err) {
-            //            return res.negotiate(err);
-            //        });
-            //    });
-            //
-            //// If branch is NOT set, use tree from params
-            //} else {
-            //    // Create media object with path to uploaded media
-            //    Media.create(params).then(function (media) {
-            //        return res.json(media);
-            //    }).catch(function (err) {
-            //        return res.negotiate(err);
-            //    });
-            //}
         });
     },
 
