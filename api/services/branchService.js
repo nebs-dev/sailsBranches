@@ -87,5 +87,31 @@ module.exports = {
 
             return cb(null, levels[0]);
         });
+    },
+
+    /**
+     * Get users from branch
+     * @param branch
+     * @param cb
+     */
+    getUsers: function (branchIds, type, cb) {
+        // Get permissions for every branch
+        Permission.find({branch: branchIds}).then(function (permissions) {
+
+            // Get users from branch permissions
+            var userIds = _.pluck(permissions, 'user');
+            User.find(userIds).populate('role').then(function (users) {
+
+                // Get only users with role 'student'
+                var students = _.filter(users, function (user) {
+                    return user.role.name == 'student';
+                });
+
+                return cb(null, students);
+            });
+
+        }).catch(function (err) {
+            return cb(err);
+        });
     }
 };

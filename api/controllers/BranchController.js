@@ -103,32 +103,35 @@ module.exports = {
      * @param res
      */
     getStudents: function (req, res) {
-        var children = [];
-        children.push(req.params.id);
+        var params = req.params.all();
+        if (params.type !== 'single' && params.type !== 'multiple') return res.customBadRequest();
 
-        // Get branch && its children in save level
-        branchService.list(children, false, function (err, branches) {
-            if (err) return res.negotiate(err);
+        // single level
+        if (params.type === 'single') {
 
-            // Get permissions for every branch
-            var branchIds = _.pluck(branches, 'id');
-            Permission.find({branch: branchIds}).then(function (permissions) {
-
-                // Get users from branches permissions
-                var userIds = _.pluck(permissions, 'user');
-                User.find(userIds).populate('role').then(function (users) {
-
-                    // Get only users with role 'student'
-                    var students = _.filter(users, function (user) {
-                        return user.role.name == 'student';
-                    });
-                    return res.ok(students);
-                });
-
-            }).catch(function (err) {
-                return res.negotiate(err);
+            var branchIds = [params.id];
+            branchService.getUsers(branchIds, params.type, function (err, users) {
+                if (err) return res.negotiate(err);
+                return res.ok(users);
             });
-        });
+
+        // multiple levels
+        } else {
+            var children = [];
+            children.push(params.id);
+
+            // Get branch && its children in save level
+            branchService.list(children, false, function (err, branches) {
+                if (err) return res.negotiate(err);
+
+                // Get all branch IDs from user permission
+                var branchIds = _.pluck(branches, 'id');
+                branchService.getUsers(branchIds, params.type, function (err, users) {
+                    if (err) return res.negotiate(err);
+                    return res.ok(users);
+                });
+            });
+        }
     }
 
 };
