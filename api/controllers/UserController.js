@@ -44,8 +44,17 @@ module.exports = {
     create: function (req, res) {
         var params = req.params.all();
 
-        User.create(params).then(function (user) {
-            return res.ok(user);
+        User.find(req.token.userId).populate('role').then(function (creator) {
+
+            if (creator.role.name === 'superadmin') {
+                if (!params.tree) return res.customBadRequest('Mising parameters.');
+            } else {
+                params.tree = creator.tree;
+            }
+
+            User.create(params).then(function (user) {
+                return res.ok(user);
+            });
         }).catch(function (err) {
             return res.negotiate(err);
         });

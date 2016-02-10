@@ -103,7 +103,7 @@ module.exports.routes = {
      * @apiParam {email} email User email (required)
      * @apiParam {string} password User password (required)
      * @apiParam {string} confirmPassword confirm User password (required)
-     * @apiParam {string} tree tree ID (required)
+     * @apiParam {string} tree tree ID (required if SUPERADMIN)
      * @apiParam {string} role role ID (required)
      */
     'POST /api/user/create': 'User.create',
