@@ -43,10 +43,12 @@ module.exports = {
      */
     create: function (req, res) {
         var params = req.params.all();
-        console.log(params);
 
         User.create(params).then(function (user) {
-            return res.ok(user);
+            Role.findOne(params.role).then(function (role) {
+                user.role = role;
+                return res.ok(user);
+            });
         }).catch(function (err) {
             return res.negotiate(err);
         });
