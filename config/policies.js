@@ -70,8 +70,9 @@ module.exports.policies = {
     },
 
     'TreeController': {
-        '*': ['tokenAuth', 'isSuperadmin'],
-        'show': ['tokenAuth']
+        'show': ['tokenAuth', 'isSuperprof'],
+        'getAllUsers': ['tokenAuth', 'isSuperprof'],
+        '*': ['tokenAuth', 'isSuperadmin']
     },
 
     'MediaController': {

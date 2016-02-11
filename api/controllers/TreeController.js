@@ -80,6 +80,36 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
+    },
+
+    /**
+     * Get all users from tree
+     * @param req
+     * @param res
+     */
+    getAllUsers: function (req, res) {
+        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
+            var options;
+
+            if (reqUser.role.name !== 'superadmin') {
+                var options = {
+                    tree: reqUser.tree
+                };
+            }
+
+            User.find(options).populate('role').populate('tree').then(function (users) {
+                if (reqUser.role.name !== 'superadmin') {
+                    var users = _.filter(users, function (user) {
+                        return user.role.name !== 'superadmin';
+                    });
+                }
+
+                return res.ok(users);
+            });
+
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     }
 
 };

@@ -289,10 +289,16 @@ module.exports.routes = {
     'POST /api/tree/addLicence': 'Tree.addLicence',
 
     /**
-     * @api {get} /api/tree/show show single Tree
+     * @api {get} /api/tree/show/:id show single Tree
      * @apiGroup Tree
      */
     'GET /api/tree/show/:id': 'Tree.show',
+
+    /**
+     * @api {get} /api/tree/users users list
+     * @apiGroup Tree
+     */
+    'GET /api/tree/users': 'Tree.getAllUsers',
 
     ////////////////////////////////////
     ////////// MEDIA CATEGORY //////////
