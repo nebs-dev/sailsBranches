@@ -104,7 +104,6 @@ module.exports = {
         if (!params.user || !params.tree) return res.customBadRequest('Missing Parameters.');
 
         Tree.findOne(params.tree).then(function (tree) {
-
             tree.users.add(params.user);
             tree.save(function (err) {
                 if (err) return res.negotiate(err);
@@ -115,7 +114,20 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
-    }
+    },
 
+
+    /**
+     * User destroy
+     * @param req
+     * @param res
+     */
+    destroy: function (req, res) {
+        User.destroy(req.params.id).then(function () {
+            return res.ok();
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    }
 };
 

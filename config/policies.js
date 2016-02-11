@@ -36,6 +36,7 @@ module.exports.policies = {
         'show': ['tokenAuth', 'ownUser'],
         'update': ['tokenAuth', 'ownUser'],
         'create': ['tokenAuth', 'userCRUD', 'isSuperprof'],
+        'destroy': ['tokenAuth', 'isSuperprof'],
         'addRole': ['tokenAuth', 'isSuperadmin'],
         'addTree': ['tokenAuth', 'isSuperadmin'],
         'list': ['tokenAuth', 'isSuperadmin'],
@@ -43,6 +44,7 @@ module.exports.policies = {
     },
 
     'RoleController': {
+        'list': ['tokenAuth', 'isSuperprof'],
         '*': ['tokenAuth', 'isSuperadmin']
     },
 

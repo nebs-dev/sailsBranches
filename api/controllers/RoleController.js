@@ -13,8 +13,18 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        Role.find().populateAll().then(function (roles) {
-            return res.json(roles);
+        // Find req user
+        User.findOne(req.token.userId).populate('role').then(function (user) {
+            var options;
+
+            // if user is superprof don't allow superadmin role in list
+            if (user.role.name === 'superprof') {
+                options = {name: {'!': 'superadmin'}}
+            }
+
+            Role.find(options).then(function (roles) {
+                return res.json(roles);
+            });
         }).catch(function (err) {
             return res.negotiate(err);
         });
