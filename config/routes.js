@@ -206,6 +206,14 @@ module.exports.routes = {
      */
     'GET /api/branch/students/:id/:type': 'Branch.getStudents',
 
+    /**
+     * @api {get} /api/branch/users/:id/:type get all users
+     * @apiGroup Branch
+     *
+     * @apiParam {string} type single/multiple branch levels
+     */
+    'GET /api/branch/users/:id/:type': 'Branch.getUsers',
+
     //////////////////////////////////
     ////////// PERMISSSIONS //////////
     //////////////////////////////////

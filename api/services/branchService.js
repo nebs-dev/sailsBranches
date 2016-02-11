@@ -90,11 +90,45 @@ module.exports = {
     },
 
     /**
-     * Get users from branch
+     * Get all users by level, role && branchIDs
+     * @param params
+     * @param role
+     * @param cb
+     */
+    getUsers: function (params, role, cb) {
+        // single level
+        if (params.type === 'single') {
+            var branchIds = [params.id];
+            branchService.getBranchUsers(branchIds, role, function (err, users) {
+                if (err) return cb(err);
+                return cb(null, users);
+            });
+
+        // multiple levels
+        } else {
+            var children = [];
+            children.push(params.id);
+
+            // Get branch && its children in save level
+            branchService.list(children, false, function (err, branches) {
+                if (err) return cb(err);
+
+                // Get all branch IDs from user permission
+                var branchIds = _.pluck(branches, 'id');
+                branchService.getBranchUsers(branchIds, role, function (err, users) {
+                    if (err) return cb(err);
+                    return cb(null, users);
+                });
+            });
+        }
+    },
+
+    /**
+     * Get users by branchIds and role
      * @param branch
      * @param cb
      */
-    getUsers: function (branchIds, type, cb) {
+    getBranchUsers: function (branchIds, role, cb) {
         // Get permissions for every branch
         Permission.find({branch: branchIds}).then(function (permissions) {
 
@@ -102,12 +136,21 @@ module.exports = {
             var userIds = _.pluck(permissions, 'user');
             User.find(userIds).populate('role').then(function (users) {
 
-                // Get only users with role 'student'
-                var students = _.filter(users, function (user) {
-                    return user.role.name == 'student';
-                });
+                // Get only users with role 'student' if role === 'student'
+                if (role === 'student') {
+                    var users = _.filter(users, function (user) {
+                        return user.role.name === role;
+                    });
+                } else {
+                    var users = _.filter(users, function (user) {
+                        return user.role.name !== 'superadmin' && user.role.name !== 'superprof';
+                    });
+                }
 
-                return cb(null, students);
+                return cb(null, users);
+
+            }).catch(function (err) {
+                return cb(err);
             });
 
         }).catch(function (err) {

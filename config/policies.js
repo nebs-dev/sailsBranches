@@ -52,6 +52,8 @@ module.exports.policies = {
         'update': ['tokenAuth', 'isSuperprof'],
         'destroy': ['tokenAuth', 'branchDestroy'],
         'list': ['tokenAuth'],
+        'getStudents': ['tokenAuth', 'branchAccess'],
+        'getUsers': ['tokenAuth', 'branchAccess', 'isSuperprof'],
         '*': true
     },
 

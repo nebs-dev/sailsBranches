@@ -106,32 +106,25 @@ module.exports = {
         var params = req.params.all();
         if (params.type !== 'single' && params.type !== 'multiple') return res.customBadRequest();
 
-        // single level
-        if (params.type === 'single') {
+        branchService.getUsers(params, 'student', function (err, students) {
+            if (err) return res.negotiate(err);
+            return res.ok(students);
+        });
+    },
 
-            var branchIds = [params.id];
-            branchService.getUsers(branchIds, params.type, function (err, users) {
-                if (err) return res.negotiate(err);
-                return res.ok(users);
-            });
+    /**
+     * Get all users in branch and in its children
+     * @param req
+     * @param res
+     */
+    getUsers: function (req, res) {
+        var params = req.params.all();
+        if (params.type !== 'single' && params.type !== 'multiple') return res.customBadRequest();
 
-        // multiple levels
-        } else {
-            var children = [];
-            children.push(params.id);
-
-            // Get branch && its children in save level
-            branchService.list(children, false, function (err, branches) {
-                if (err) return res.negotiate(err);
-
-                // Get all branch IDs from user permission
-                var branchIds = _.pluck(branches, 'id');
-                branchService.getUsers(branchIds, params.type, function (err, users) {
-                    if (err) return res.negotiate(err);
-                    return res.ok(users);
-                });
-            });
-        }
+        branchService.getUsers(params, 'all', function (err, students) {
+            if (err) return res.negotiate(err);
+            return res.ok(students);
+        });
     }
 
 };
