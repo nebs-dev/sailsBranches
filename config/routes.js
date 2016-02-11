@@ -97,6 +97,12 @@ module.exports.routes = {
     'POST /api/user/update/:id': 'User.update',
 
     /**
+     * @api {get} /api/user/destroy/:id destroy
+     * @apiGroup User
+     */
+    'POST /api/user/destroy/:id': 'User.destroy',
+
+    /**
      * @api {post} /api/user/create create
      * @apiGroup User
      *
