@@ -91,16 +91,18 @@ module.exports = {
         User.findOne(req.token.userId).populate('role').then(function (reqUser) {
             var options;
 
+            // user get users from all trees
             if (reqUser.role.name !== 'superadmin') {
-                var options = {
+                options = {
                     tree: reqUser.tree
                 };
             }
 
             User.find(options).populate('role').populate('tree').then(function (users) {
+                // only superadmin can see superadmins in list
                 if (reqUser.role.name !== 'superadmin') {
                     var users = _.filter(users, function (user) {
-                        return user.role.name !== 'superadmin';
+                        return user.role.name !== 'superadmin' && user.role.name !== 'superprof';
                     });
                 }
 

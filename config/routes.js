@@ -93,6 +93,9 @@ module.exports.routes = {
      *
      * @apiParam {email} email User email
      * @apiParam {string} password User password
+     * @apiParam {string} firstName first name
+     * @apiParam {string} lastName last name
+     * @apiParam {string} mobile mobile
      */
     'POST /api/user/update/:id': 'User.update',
 
@@ -107,6 +110,9 @@ module.exports.routes = {
      * @apiGroup User
      *
      * @apiParam {email} email User email (required)
+     * @apiParam {string} firstName first name (required)
+     * @apiParam {string} lastName last name (required)
+     * @apiParam {string} mobile mobile (required)
      * @apiParam {string} password User password (required)
      * @apiParam {string} confirmPassword confirm User password (required)
      * @apiParam {string} tree tree ID (required if SUPERADMIN)
@@ -174,7 +180,7 @@ module.exports.routes = {
      * @api {get} /api/branch/:id Branch data
      * @apiGroup Branch
      */
-    'GET /api/branch/:id': 'Branch.view',
+    'GET /api/branch/:id': 'Branch.show',
 
     /**
      * @api {post} /api/branch/create create

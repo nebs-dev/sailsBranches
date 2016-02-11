@@ -29,6 +29,26 @@ module.exports = {
     },
 
     /**
+     * Get single branch and its children
+     * @param req
+     * @param res
+     */
+    show: function (req, res) {
+        Branch.findOne(req.params.id).then(function (branch) {
+            if (!branch) return res.notFound('Branch not found.');
+
+            branchService.list([branch.id], true, function (err, branches) {
+                if (err) return res.negotiate(err);
+
+                return res.ok(branches[0]);
+            });
+
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
      * Create new branch
      * @param req
      * @param res
@@ -66,19 +86,6 @@ module.exports = {
             })
 
 
-        }).catch(function (err) {
-            return res.negotiate(err);
-        });
-    },
-
-    /**
-     * View branch
-     * @param req
-     * @param res
-     */
-    view: function (req, res) {
-        Branch.findOne(req.params.id).then(function (branch) {
-            return res.json(branch);
         }).catch(function (err) {
             return res.negotiate(err);
         });

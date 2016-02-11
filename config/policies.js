@@ -34,8 +34,8 @@ module.exports.policies = {
 
     'UserController': {
         'show': ['tokenAuth', 'ownUser'],
-        'update': ['tokenAuth', 'ownUser'],
-        'create': ['tokenAuth', 'userCRUD', 'isSuperprof'],
+        'update': ['tokenAuth', 'ownUser', 'userUpdate'],
+        'create': ['tokenAuth', 'userCreate', 'isSuperprof'],
         'destroy': ['tokenAuth', 'isSuperprof'],
         'addRole': ['tokenAuth', 'isSuperadmin'],
         'addTree': ['tokenAuth', 'isSuperadmin'],
@@ -49,14 +49,14 @@ module.exports.policies = {
     },
 
     'BranchController': {
-        'view': ['tokenAuth', 'branchAccess'],
+        'show': ['tokenAuth', 'branchAccess'],
         'create': ['tokenAuth', 'branchCreate'],
         'update': ['tokenAuth', 'isSuperprof'],
         'destroy': ['tokenAuth', 'branchDestroy'],
         'list': ['tokenAuth'],
         'getStudents': ['tokenAuth', 'branchAccess'],
         'getUsers': ['tokenAuth', 'branchAccess', 'isSuperprof'],
-        '*': true
+        '*': false
     },
 
     'PermissionController': {
@@ -70,7 +70,6 @@ module.exports.policies = {
     },
 
     'TreeController': {
-        'show': ['tokenAuth', 'isSuperprof'],
         'getAllUsers': ['tokenAuth', 'isSuperprof'],
         '*': ['tokenAuth', 'isSuperadmin']
     },
