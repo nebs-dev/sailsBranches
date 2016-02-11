@@ -23,6 +23,19 @@ module.exports = {
     },
 
     /**
+     * list all trees
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+        Tree.find().then(function (trees) {
+            return res.ok(trees);
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
      * Add licence to Tree
      * @param req
      * @param res

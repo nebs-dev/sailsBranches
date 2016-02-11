@@ -40,6 +40,16 @@ module.exports = {
     },
 
     /**
+     * Add basic licence before create
+     * @param newlyInsertedRecord
+     * @param cb
+     */
+    beforeCreate: function(values, cb) {
+        values.licence = process.env.basicLicence;
+        return cb();
+    },
+
+    /**
      * Destroy all branches && files in this Tree
      * @param destroyedRecords
      * @param cb

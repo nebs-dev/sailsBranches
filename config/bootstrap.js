@@ -15,7 +15,19 @@ module.exports.bootstrap = function (cb) {
     // It's very important to trigger this callback method when you are finished
     // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
 
-    grunt.tasks('default', {}, function () {
+    var licence = {
+        'name': 'Basic Licence',
+        'vertical': 1,
+        'horizontal': 3,
+        'price': 0,
+        'status': true
+    };
+
+    // Create basic licence
+    Licence.findOrCreate(licence).then(function (licence) {
+        // Set env variable with basicLicence ID
+        process.env.basicLicence = licence.id;
+
         var rolesArray = ['superadmin', 'superprof', 'prof', 'student'];
         Role.find({name: rolesArray}).then(function (roles) {
             // Find missing roles
@@ -60,6 +72,7 @@ module.exports.bootstrap = function (cb) {
                             'role': superadminRole.id
                         };
 
+                        // Create superadmin user
                         User.create(userParams).then(function (user) {
                             grunt.tasks('default', {}, function () {
                                 return cb();
@@ -68,9 +81,9 @@ module.exports.bootstrap = function (cb) {
                     });
                 });
             });
-
-        }).catch(function (err) {
-            return res.negotiate(err);
         });
+
+    }).catch(function (err) {
+        return res.negotiate(err);
     });
 };

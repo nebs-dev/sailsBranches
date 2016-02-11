@@ -307,6 +307,12 @@ module.exports.routes = {
     'GET /api/tree/show/:id': 'Tree.show',
 
     /**
+     * @api {get} /api/trees list
+     * @apiGroup Tree
+     */
+    'GET /api/trees': 'Tree.list',
+
+    /**
      * @api {get} /api/tree/users users list
      * @apiGroup Tree
      */
