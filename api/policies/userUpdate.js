@@ -5,26 +5,27 @@ module.exports = function (req, res, next) {
     User.findOne(req.token.userId).then(function (reqUser) {
 
         // user email must be unique in one tree
-        User.findOne({email: params.email, tree: params.tree}).then(function (user) {
-            if (user && user.id !== req.params.id) return res.customBadRequest('Email already exists.');
-            if (reqUser.role.name === 'superadmin') return next();
+        return [User.findOne({email: params.email, tree: params.tree}), reqUser];
 
-            // Check if reqUser has permission to change role
-            if (params.role) {
-                Role.findOne(params.role).then(function (role) {
-                    if (!role) return res.notFound('Role not found.');
-                    if (role.name === 'superadmin' || role.name === 'superprof') return res.unauthorized();
+    }).then(function (user, reqUser) {
+        if (user && user.id !== req.params.id) return res.customBadRequest('Email already exists.');
+        if (reqUser.role.name === 'superadmin') return next();
 
-                    return next();
+        // Check if reqUser has permission to change role
+        if (params.role) {
+            Role.findOne(params.role).then(function (role) {
+                if (!role) return res.notFound('Role not found.');
+                if (role.name === 'superadmin' || role.name === 'superprof') return res.unauthorized();
 
-                }).catch(function (err) {
-                    res.negotiate(err);
-                });
-
-            } else {
                 return next();
-            }
-        });
+
+            }).catch(function (err) {
+                res.negotiate(err);
+            });
+
+        } else {
+            return next();
+        }
 
     }).catch(function (err) {
         res.negotiate(err);

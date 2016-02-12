@@ -23,32 +23,35 @@ module.exports = function (req, res, next) {
         var parent = req.body.parent || 'undefined';
 
         // Get parent
-        Branch.findOne(parent).then(function (parent) {
+        return [Branch.findOne(parent), user];
 
-            // Not allowed to create branch in a tree without licence
-            if (!user.tree.licence) return res.accessDenied('Your tree has no licence!');
+    }).spread(function (parent, user) {
 
-            // Get tree licence
-            Licence.findOne(user.tree.licence).then(function (licence) {
+        // Not allowed to create branch in a tree without licence
+        if (!user.tree.licence) return res.accessDenied('Your tree has no licence!');
 
-                // Set level
-                var level = parent ? parent.level + 1 : 0;
+        // Get tree licence
+        return [Licence.findOne(user.tree.licence), parent, user];
 
-                // Get branches in this level
-                Branch.find({where: {level: level, tree: user.tree.id}}).then(function (levelBranches) {
+    }).spread(function (licence, parent, user) {
 
-                    // horizontal check
-                    if (levelBranches.length + 1 > licence.horizontal)
-                        return res.accessDenied('Maximum branches in this level reached.');
+        // Set level
+        var level = parent ? parent.level + 1 : 0;
 
-                    // vertical check
-                    if (level + 1 > licence.vertical)
-                        return res.accessDenied('Maximum levels reached.');
+        // Get branches in this level
+        return [Branch.find({where: {level: level, tree: user.tree.id}}), licence];
 
-                    next();
-                });
-            });
-        });
+    }).then(function (levelBranches, licence) {
+
+        // horizontal check
+        if (levelBranches.length + 1 > licence.horizontal)
+            return res.accessDenied('Maximum branches in this level reached.');
+
+        // vertical check
+        if (level + 1 > licence.vertical)
+            return res.accessDenied('Maximum levels reached.');
+
+        next();
 
     }).catch(function (err) {
         return res.negotiate(err);

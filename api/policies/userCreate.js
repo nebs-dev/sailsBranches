@@ -13,11 +13,11 @@ module.exports = function (req, res, next) {
         }
 
         // user email must be unique in one tree
-        User.findOne({email: params.email, tree: params.tree}).then(function (user) {
-            if (user) return res.customBadRequest('Email already exists.');
+        return User.findOne({email: params.email, tree: params.tree});
 
-            return next();
-        });
+    }).then(function (user) {
+        if (user) return res.customBadRequest('Email already exists.');
+        return next();
 
     }).catch(function (err) {
         res.negotiate(err);
