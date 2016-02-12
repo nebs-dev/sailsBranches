@@ -28,7 +28,6 @@ module.exports = {
     show: function (req, res) {
         User.findOne(req.params.id).populateAll().then(function (user) {
             if (!user) return res.notFound();
-
             return res.json(user);
 
         }).catch(function (err) {
@@ -45,10 +44,11 @@ module.exports = {
         var params = req.params.all();
 
         User.create(params).then(function (user) {
-            Role.findOne(params.role).then(function (role) {
-                user.role = role;
-                return res.ok(user);
-            });
+            return Role.findOne(params.role)
+        }).then(function (role) {
+            user.role = role;
+            return res.ok(user);
+
         }).catch(function (err) {
             return res.negotiate(err);
         });
@@ -83,13 +83,13 @@ module.exports = {
 
             role.users.add(params.user);
             role.save(function (err) {
-               if (err) return res.negotiate(err);
+                if (err) return res.negotiate(err);
 
                 return res.json(role);
             });
 
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 

@@ -85,6 +85,11 @@ module.exports.policies = {
 
     'EventController': {
         '*': ['tokenAuth']
+    },
+
+    'EventType': {
+        'list': ['tokenAuth'],
+        '*': ['tokenAuth', 'isSuperprof']
     }
 
     /***************************************************************************

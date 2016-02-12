@@ -76,13 +76,12 @@ module.exports = {
 
             // Update this child with its parent parents and add current parent to that
             values.parents = parent.parents ? _.clone(parent.parents) : [];
-            if(parent.id) {
+            if (parent.id) {
                 values.parents.push(parent.id);
             }
 
             // Calculate level
             values.level = values.parents.length;
-
             cb();
 
         }).catch(function (err) {
@@ -105,7 +104,7 @@ module.exports = {
         Permission.create(permissionData).then(function (permission) {
             cb();
         }).catch(function (err) {
-           cb(err);
+            cb(err);
         });
     },
 
@@ -127,40 +126,41 @@ module.exports = {
             if ((valuesToBeUpdated.parent == updatedChild.parent || !valuesToBeUpdated.parent)) return cb();
 
             // Get future parent of this updated child
-            Branch.findOne(valuesToBeUpdated.parent).then(function (parent) {
-                if (!parent) return cb('Not found');
+            return Branch.findOne(valuesToBeUpdated.parent);
 
-                // check if updatedChild is parent of new parent - forbid
-                if (_.contains(parent.parents, updatedChild.id)) return cb('Wrong parent');
+        }).then(function (parent) {
+            if (!parent) return cb('Not found');
 
-                // if parent level is 0
-                parent = parent || {};
+            // check if updatedChild is parent of new parent - forbid
+            if (_.contains(parent.parents, updatedChild.id)) return cb('Wrong parent');
 
-                // Update this child with its parent parents and add current parent to that
-                valuesToBeUpdated.parents = parent.parents ? _.clone(parent.parents) : [];
-                if(parent.id) {
-                    valuesToBeUpdated.parents.push(parent.id);
-                }
+            // if parent level is 0
+            parent = parent || {};
+
+            // Update this child with its parent parents and add current parent to that
+            valuesToBeUpdated.parents = parent.parents ? _.clone(parent.parents) : [];
+            if (parent.id) {
+                valuesToBeUpdated.parents.push(parent.id);
+            }
+
+            // Calculate level
+            valuesToBeUpdated.level = valuesToBeUpdated.parents.length;
+
+            // add Parents for updatedChild children ( valuesToBeUpdated.parents + valuesToBeUpdated.id )
+            var parents = _.clone(valuesToBeUpdated.parents);
+            parents.push(valuesToBeUpdated.id);
+
+            // Update parents of every updatedChild children
+            _.each(updatedChild.children, function (child) {
+                child.parents = parents;
 
                 // Calculate level
-                valuesToBeUpdated.level = valuesToBeUpdated.parents.length;
+                child.level = child.parents.length;
 
-                // add Parents for updatedChild children ( valuesToBeUpdated.parents + valuesToBeUpdated.id )
-                var parents = _.clone(valuesToBeUpdated.parents);
-                parents.push(valuesToBeUpdated.id);
-
-                // Update parents of every updatedChild children
-                _.each(updatedChild.children, function (child) {
-                    child.parents = parents;
-
-                    // Calculate level
-                    child.level = child.parents.length;
-
-                    child.save();
-                });
-
-                cb();
+                child.save();
             });
+
+            cb();
 
         }).catch(function (err) {
             cb(err);
@@ -177,9 +177,9 @@ module.exports = {
         if (!destroyedRecords.length) return cb();
 
         Branch.destroy({parent: destroyedRecords[0].id}).then(function () {
-            Permission.destroy({branch: destroyedRecords[0].id}).then(function () {
-                return cb();
-            });
+            return Permission.destroy({branch: destroyedRecords[0].id})
+        }).then(function () {
+            return cb();
         }).catch(function (err) {
             return cb(err);
         });

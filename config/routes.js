@@ -100,7 +100,7 @@ module.exports.routes = {
     'POST /api/user/update/:id': 'User.update',
 
     /**
-     * @api {get} /api/user/destroy/:id destroy
+     * @api {post} /api/user/destroy/:id destroy
      * @apiGroup User
      */
     'POST /api/user/destroy/:id': 'User.destroy',
@@ -356,9 +356,11 @@ module.exports.routes = {
      * @api {post} /api/media/upload upload
      * @apiGroup Media
      *
-     * @apiParam {file} fileToUpload media to upload (required)
+     * @apiParam {string} title media title (required)
+     * @apiParam {string} url media url
      * @apiParam {integer} tree Tree ID (required)
      * @apiParam {array} branches Branches IDs
+     * @apiParam {file} fileToUpload media to upload (required)
      */
     'POST /api/media/upload': 'Media.upload',
 
@@ -408,6 +410,8 @@ module.exports.routes = {
      * @apiGroup EventType
      *
      * @apiParam {string} title Event Type title (required)
+     * @apiParam {string} color hex color (required)
+     * @apiParam {string} tree treeID (required if superadmin)
      */
     'POST /api/eventType/create': 'EventType.create',
 
@@ -416,6 +420,8 @@ module.exports.routes = {
      * @apiGroup EventType
      *
      * @apiParam {string} title Event Type title
+     * @apiParam {string} color hex color
+     * @apiParam {string} tree treeID (superadmin)
      */
     'POST /api/eventType/update': 'EventType.update',
 

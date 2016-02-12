@@ -17,18 +17,15 @@ module.exports = {
 
         User.findOne(req.token.userId).populate('role').then(function (user) {
             if (!user) return res.notFound('User not found');
+            if (user.role.name !== 'superadmin') params.tree = user.tree;
 
-            if (user.role.name === 'superadmin') {
-                if (!params.tree) return res.customBadRequest('Mising parameters.');
-            } else {
-                params.tree = user.tree;
-            }
+            return Event.create(params);
 
-            Event.create(params).then(function (event) {
-               return res.ok(event);
-            });
+        }).then(function (event) {
+            return res.ok(event);
+
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 
@@ -39,35 +36,26 @@ module.exports = {
      */
     list: function (req, res) {
         User.findOne(req.token.userId).populate('permissions').populate('role').then(function (user) {
-            console.log(user);
-
             var branchIds = _.pluck(user.permissions, 'branch');
             var options;
 
+            // if user !superadmin populate only branches with permission
             if (user.role.name !== 'superadmin') {
-                console.log(branchIds);
                 options = {
                     id: branchIds
                 };
             }
 
-            Event.find({tree: user.tree}).populate('branches', options).then(function (events) {
+            return Event.find({tree: user.tree}).populate('branches', options);
 
-                events = _.filter(events, function (event) {
-                    return event.branches.length;
-                });
+        }).then(function (events) {
 
-                return res.ok(events);
+            // filter only events with branches (user permission)
+            events = _.filter(events, function (event) {
+                return event.branches.length;
             });
 
-            //Event.find().populate('branches').then(function (events) {
-            //    var allowedEvents = _.filter(events, function (event) {
-            //        var allowedBranches = _.intersection(event.branches, branchIds);
-            //        return allowedBranches.length ? 1 : 0;
-            //    });
-            //
-            //    return res.ok(allowedEvents);
-            //});
+            return res.ok(events);
 
         }).catch(function (err) {
             return res.negotiate(err);

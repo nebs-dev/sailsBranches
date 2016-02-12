@@ -153,7 +153,6 @@ module.exports = {
 
         Permission.destroy({user: destroyedRecords[0].id}).then(function () {
             return cb();
-
         }).catch(function (err) {
             return cb(err);
         });

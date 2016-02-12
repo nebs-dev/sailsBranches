@@ -1,7 +1,7 @@
 /**
  * AuthController
  *
- * @description :: Server-side logic for managing auths
+ * @description :: Server-side logic for managing user authentication
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
@@ -19,9 +19,11 @@ module.exports = {
 
         if (!email || !password) return res.customBadRequest('Missing Parameters.');
 
+        // Find user by email
         User.findOneByEmail(email).populate('role').then(function (user) {
             if (!user) return res.accessDenied('Invalid email or password');
 
+            // validate user password
             User.validPassword(password, user, function (err, valid) {
                 if (err) return res.accessDenied();
 
@@ -55,29 +57,22 @@ module.exports = {
         // Create tree
         Tree.create({name: 'Generic tree'}).then(function (tree) {
             // Find role "superprof"
-            Role.findOne({name: 'superprof'}).then(function (role) {
-                // Create user in tree && add role to him
-                User.create({
-                    role: role.id,
-                    tree: tree.id,
-                    email: params.email,
-                    password: params.password
-                }).then(function (user) {
+            return Role.findOne({name: 'superprof'})
 
-                    var token = sailsTokenAuth.issueToken({userId: user.id, secret: user.secret});
-                    return res.json({user: user, tree: tree, token: token});
+        }).then(function (role) {
+            // Create user in tree && add role to him
+            return User.create({role: role.id, tree: tree.id, email: params.email, password: params.password});
 
-                }).catch(function (error) {
-                    tree.destroy(function (err) {
-                        if (err) return res.negotiate(err);
+        }).then(function (user) {
+            var token = sailsTokenAuth.issueToken({userId: user.id, secret: user.secret});
+            return res.json({user: user, tree: tree, token: token});
 
-                        return res.negotiate(error);
-                    });
-
-                });
-            });
         }).catch(function (err) {
-            return res.negotiate(err);
+            // if err destroy created tree
+            tree.destroy(function (err) {
+                if (err) return res.negotiate(err);
+                return res.negotiate(error);
+            });
         });
     }
 

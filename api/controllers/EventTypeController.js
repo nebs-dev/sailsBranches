@@ -1,7 +1,7 @@
 /**
  * EventTypeController
  *
- * @description :: Server-side logic for managing eventtypes
+ * @description :: Server-side logic for managing event types
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
@@ -13,10 +13,17 @@ module.exports = {
      * @param res
      */
     create: function (req, res) {
-        EventType.create(req.params.all()).then(function (type) {
+        var params = req.params.all();
+
+        User.findOne(req.token.userId).then(function (user) {
+            if (user.role.name !== 'superadmin') params.tree = user.tree;
+            return EventType.create(params);
+
+        }).then(function (type) {
             return res.ok(type);
+
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 
@@ -26,7 +33,12 @@ module.exports = {
      * @param res
      */
     update: function (req, res) {
-        EventType.update(req.params.all()).then(function (type) {
+        var params = req.params.all();
+
+        User.findOne(req.token.userId).then(function (user) {
+            if (user.role.name !== 'superadmin') params.tree = user.tree;
+            return EventType.update(params);
+        }).then(function (type) {
             return res.ok(type[0]);
         }).catch(function (err) {
             return res.negotiate(err);
@@ -42,7 +54,7 @@ module.exports = {
         EventType.find().then(function (types) {
             return res.ok(types);
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 

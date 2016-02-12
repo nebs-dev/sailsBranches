@@ -36,6 +36,11 @@ module.exports = {
         events: {
             collection: 'event',
             via: 'tree'
+        },
+
+        eventTypes: {
+            collection: 'eventType',
+            via: 'tree'
         }
     },
 
@@ -44,7 +49,7 @@ module.exports = {
      * @param newlyInsertedRecord
      * @param cb
      */
-    beforeCreate: function(values, cb) {
+    beforeCreate: function (values, cb) {
         values.licence = process.env.basicLicence;
         return cb();
     },
@@ -56,11 +61,12 @@ module.exports = {
      */
     afterDestroy: function (destroyedRecords, cb) {
         Branch.destroy({tree: destroyedRecords[0].id}).then(function () {
-            Media.destroy({tree: destroyedRecords[0].id}).then(function () {
-                Event.destroy({tree: destroyedRecords[0].id}).then(function () {
-                    return cb();
-                });
-            });
+            return Media.destroy({tree: destroyedRecords[0].id});
+        }).then(function () {
+            return Event.destroy({tree: destroyedRecords[0].id});
+        }).then(function () {
+            return cb();
+
         }).catch(function (err) {
             return cb(err);
         });

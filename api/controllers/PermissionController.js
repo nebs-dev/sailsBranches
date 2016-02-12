@@ -25,10 +25,10 @@ module.exports = {
         // First check if this permission already exist.
         Permission.findOne({user: params.user, branch: params.branch}).then(function (permission) {
             if (permission) return res.customBadRequest('Already added');
+            return Permission.create(data)
 
-            Permission.create(data).then(function (permission) {
-                return res.json(permission);
-            });
+        }).then(function (permission) {
+            return res.json(permission);
 
         }).catch(function (err) {
             return res.negotiate(err);

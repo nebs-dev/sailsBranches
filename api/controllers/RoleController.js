@@ -13,7 +13,6 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        // Find req user
         User.findOne(req.token.userId).populate('role').then(function (user) {
             var options;
 
@@ -22,9 +21,11 @@ module.exports = {
                 options = {name: {'!': 'superadmin'}}
             }
 
-            Role.find(options).then(function (roles) {
-                return res.json(roles);
-            });
+            return Role.find(options)
+
+        }).then(function (roles) {
+            return res.json(roles);
+
         }).catch(function (err) {
             return res.negotiate(err);
         });
@@ -53,10 +54,10 @@ module.exports = {
     update: function (req, res) {
         var params = req.params.all();
 
-        Role.update(req.params.id, params).then(function(role) {
+        Role.update(req.params.id, params).then(function (role) {
             return res.json(role);
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     }
 

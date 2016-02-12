@@ -27,7 +27,8 @@ module.exports = {
         },
 
         url: {
-            type: 'string'
+            type: 'string',
+            url: true
         },
 
         relationModel: {

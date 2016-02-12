@@ -1,4 +1,3 @@
-
 module.exports = {
 
     /**
@@ -14,19 +13,20 @@ module.exports = {
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return callback(null, user, null);
 
-            Branch.findOne(branch_id).then(function (branch) {
-                if (!branch) return callback({err: "branch not found"});
+            return Branch.findOne(branch_id);
 
-                // Check if user have permission for this branch
-                var permittedBranches = _.pluck(user.permissions, 'branch');
-                if (permittedBranches.indexOf(branch.id) > -1) return callback(null, user, branch);
+        }).then(function (branch) {
+            if (!branch) return callback({err: "branch not found"});
 
-                // Check if user have permission for any of this branch parents
-                var allowedParents = _.intersection(permittedBranches, branch.parents);
-                if (!allowedParents.length) return callback({err: "not allowed"});
+            // Check if user have permission for this branch
+            var permittedBranches = _.pluck(user.permissions, 'branch');
+            if (permittedBranches.indexOf(branch.id) > -1) return callback(null, user, branch);
 
-                return callback(null, user, branch);
-            });
+            // Check if user have permission for any of this branch parents
+            var allowedParents = _.intersection(permittedBranches, branch.parents);
+            if (!allowedParents.length) return callback({err: "not allowed"});
+
+            return callback(null, user, branch);
 
         }).catch(function (err) {
             return callback(err);
@@ -43,13 +43,13 @@ module.exports = {
     list: function (children, tree, cb) {
         var allBranches = [];
 
-        async.until(function() {
+        async.until(function () {
             return !children.length;
-        }, function(callback) {
+        }, function (callback) {
             Branch.find(children).populate('children').populate('media').then(function (branches) {
                 var allChildren = [];
 
-                _.each(branches, function(branch) {
+                _.each(branches, function (branch) {
                     var branchToJSON = branch.toJSON();
                     branchToJSON.children = _.pluck(branchToJSON.children, 'id');
                     allBranches.push(branchToJSON);
@@ -59,28 +59,28 @@ module.exports = {
                 children = allChildren;
                 return callback(null);
 
-            }).catch(function(err) {
+            }).catch(function (err) {
                 return callback(err);
             });
 
-        }, function(err){
+        }, function (err) {
             if (err) return cb(err);
 
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
 
             // If !tree return all branches in one level
-            var uniqueBranches = _.uniq(allBranches, function(item, key, id) {
+            var uniqueBranches = _.uniq(allBranches, function (item, key, id) {
                 return item.id;
             });
             if (!tree) return cb(null, uniqueBranches);
 
             // Length = 1, 2, 3 / array = 0, 1, 2 => and we don't look last level because it don't have children, so length-2
-            for(var levelNo=levels.length-2; levelNo>=0; levelNo--) {
-                _.each(levels[levelNo], function(level) {
-                    _.each(level.children, function(child, key) {
+            for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
+                _.each(levels[levelNo], function (level) {
+                    _.each(level.children, function (child, key) {
                         var childFound = _.findWhere(allBranches, {parent: level.id});
                         level.children[key] = childFound;
-                        if(childFound) delete childFound.parent;
+                        if (childFound) delete childFound.parent;
                     });
                 });
             }
@@ -104,7 +104,7 @@ module.exports = {
                 return cb(null, users);
             });
 
-        // multiple levels
+            // multiple levels
         } else {
             var children = [];
             children.push(params.id);
@@ -134,24 +134,22 @@ module.exports = {
 
             // Get users from branch permissions
             var userIds = _.pluck(permissions, 'user');
-            User.find(userIds).populate('role').then(function (users) {
+            return User.find(userIds).populate('role')
 
-                // Get only users with role 'student' if role === 'student'
-                if (role === 'student') {
-                    var users = _.filter(users, function (user) {
-                        return user.role.name === role;
-                    });
-                } else {
-                    var users = _.filter(users, function (user) {
-                        return user.role.name !== 'superadmin' && user.role.name !== 'superprof';
-                    });
-                }
+        }).then(function (users) {
 
-                return cb(null, users);
+            // Get only users with role 'student' if role === 'student'
+            if (role === 'student') {
+                var users = _.filter(users, function (user) {
+                    return user.role.name === role;
+                });
+            } else {
+                var users = _.filter(users, function (user) {
+                    return user.role.name !== 'superadmin' && user.role.name !== 'superprof';
+                });
+            }
 
-            }).catch(function (err) {
-                return cb(err);
-            });
+            return cb(null, users);
 
         }).catch(function (err) {
             return cb(err);

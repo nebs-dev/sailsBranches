@@ -17,9 +17,21 @@ module.exports = {
             required: true
         },
 
+        color: {
+            type: 'string',
+            hexColor: true,
+            regex: /^#.+/
+        },
+
         events: {
             collection: 'event',
             via: 'type'
+        },
+
+        tree: {
+            model: 'tree',
+            via: 'eventTypes',
+            required: true
         }
     },
 
