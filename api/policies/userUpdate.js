@@ -5,11 +5,14 @@ module.exports = function (req, res, next) {
     User.findOne(req.token.userId).then(function (reqUser) {
 
         // user email must be unique in one tree
-        return [User.findOne({email: params.email, tree: params.tree}), reqUser];
+        return [User.findOne({email: params.email, tree: params.tree}), User.findOne(req.params.id), reqUser];
 
-    }).spread(function (user, reqUser) {
-        if (user && user.id !== req.params.id) return res.customBadRequest('Email already exists.');
+    }).spread(function (userEmail, user, reqUser) {
+        if (userEmail && userEmail.id !== req.params.id) return res.customBadRequest('Email already exists.');
         if (reqUser.role.name === 'superadmin') return next();
+
+        // if !superadmin check if user is in reqUsers tree
+        if (reqUser.tree !== user.tree) return res.unauthorized();
 
         // Check if reqUser has permission to change user role
         if (params.role) {
