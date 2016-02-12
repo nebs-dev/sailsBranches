@@ -44,8 +44,8 @@ module.exports = {
         var params = req.params.all();
 
         User.create(params).then(function (user) {
-            return Role.findOne(params.role)
-        }).then(function (role) {
+            return [user, Role.findOne(params.role)];
+        }).spread(function (user, role) {
             user.role = role;
             return res.ok(user);
 

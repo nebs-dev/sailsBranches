@@ -55,24 +55,30 @@ module.exports = {
         }
 
         // Create tree
+        var treeTmp;
         Tree.create({name: 'Generic tree'}).then(function (tree) {
+            treeTmp = tree;
             // Find role "superprof"
-            return Role.findOne({name: 'superprof'})
+            return [Role.findOne({name: 'superprof'}), tree];
 
-        }).then(function (role) {
+        }).spread(function (role, tree) {
             // Create user in tree && add role to him
-            return User.create({role: role.id, tree: tree.id, email: params.email, password: params.password});
+            return [User.create({role: role.id, tree: tree.id, email: params.email, password: params.password}), tree];
 
-        }).then(function (user) {
+        }).spread(function (user, tree) {
             var token = sailsTokenAuth.issueToken({userId: user.id, secret: user.secret});
             return res.json({user: user, tree: tree, token: token});
 
         }).catch(function (err) {
             // if err destroy created tree
-            tree.destroy(function (err) {
-                if (err) return res.negotiate(err);
-                return res.negotiate(error);
-            });
+            if(treeTmp) {
+                treeTmp.destroy(function (error) {
+                    if (error) return res.negotiate(error);
+                    return res.negotiate(err);
+                });
+            } else {
+                return res.negotiate(err);
+            }
         });
     }
 
