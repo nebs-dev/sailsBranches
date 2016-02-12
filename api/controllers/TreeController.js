@@ -111,9 +111,9 @@ module.exports = {
                 };
             }
 
-            return User.find(options).populate('role').populate('tree')
+            return [reqUser, User.find(options).populate('role').populate('tree')]
 
-        }).then(function (users) {
+        }).spread(function (reqUser, users) {
             // only superadmin can see superadmins in list
             if (reqUser.role.name !== 'superadmin') {
                 var users = _.filter(users, function (user) {

@@ -410,7 +410,7 @@ module.exports.routes = {
      * @apiGroup EventType
      *
      * @apiParam {string} title Event Type title (required)
-     * @apiParam {string} color hex color (required)
+     * @apiParam {string} color hex color (required) (example: #ea4335)
      * @apiParam {string} tree treeID (required if superadmin)
      */
     'POST /api/eventType/create': 'EventType.create',
@@ -420,7 +420,7 @@ module.exports.routes = {
      * @apiGroup EventType
      *
      * @apiParam {string} title Event Type title
-     * @apiParam {string} color hex color
+     * @apiParam {string} color hex color (example: #ea4335)
      * @apiParam {string} tree treeID (superadmin)
      */
     'POST /api/eventType/update': 'EventType.update',
