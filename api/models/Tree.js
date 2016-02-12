@@ -61,8 +61,8 @@ module.exports = {
      */
     afterDestroy: function (destroyedRecords, cb) {
         Branch.destroy({tree: destroyedRecords[0].id}).then(function () {
-            return Media.destroy({tree: destroyedRecords[0].id});
-        }).then(function () {
+            return [Media.destroy({tree: destroyedRecords[0].id}), destroyedRecords];
+        }).spread(function (des, destroyedRecords) {
             return Event.destroy({tree: destroyedRecords[0].id});
         }).then(function () {
             return cb();

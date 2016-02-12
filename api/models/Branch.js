@@ -126,9 +126,9 @@ module.exports = {
             if ((valuesToBeUpdated.parent == updatedChild.parent || !valuesToBeUpdated.parent)) return cb();
 
             // Get future parent of this updated child
-            return Branch.findOne(valuesToBeUpdated.parent);
+            return [Branch.findOne(valuesToBeUpdated.parent), valuesToBeUpdated];
 
-        }).then(function (parent) {
+        }).spread(function (parent, valuesToBeUpdated) {
             if (!parent) return cb('Not found');
 
             // check if updatedChild is parent of new parent - forbid

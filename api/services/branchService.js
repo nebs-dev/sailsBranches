@@ -13,9 +13,9 @@ module.exports = {
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return callback(null, user, null);
 
-            return Branch.findOne(branch_id);
+            return [user, Branch.findOne(branch_id)];
 
-        }).then(function (branch) {
+        }).spread(function (user, branch) {
             if (!branch) return callback({err: "branch not found"});
 
             // Check if user have permission for this branch
@@ -134,9 +134,9 @@ module.exports = {
 
             // Get users from branch permissions
             var userIds = _.pluck(permissions, 'user');
-            return User.find(userIds).populate('role')
+            return [User.find(userIds).populate('role'), branchIds, role];
 
-        }).then(function (users) {
+        }).spread(function (users, branchIds, role) {
 
             // Get only users with role 'student' if role === 'student'
             if (role === 'student') {
