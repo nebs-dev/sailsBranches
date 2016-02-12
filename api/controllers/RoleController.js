@@ -18,7 +18,7 @@ module.exports = {
 
             // if user is superprof don't allow superadmin role in list
             if (user.role.name === 'superprof') {
-                options = {name: {'!': 'superadmin'}}
+                options = {name: {'!': ['superadmin', 'superprof']}}
             }
 
             return Role.find(options)
