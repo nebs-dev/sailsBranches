@@ -7,13 +7,19 @@
 
 module.exports = {
 
+    /**
+     * User login
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     login: function (req, res) {
         var email = req.param('email');
         var password = req.param('password');
 
         if (!email || !password) return res.customBadRequest('Missing Parameters.');
 
-        User.findOneByEmail(email, function (err, user) {
+        User.findOneByEmail(email).populate('role').then(function (user) {
             if (!user) return res.accessDenied('Invalid email or password');
 
             User.validPassword(password, user, function (err, valid) {
@@ -25,10 +31,19 @@ module.exports = {
                     res.json({user: user, token: sailsTokenAuth.issueToken({userId: user.id, secret: user.secret})});
                 }
             });
-        })
+
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     },
 
 
+    /**
+     * Register user
+     * @param req
+     * @param res
+     * @returns {*}
+     */
     register: function (req, res) {
         var params = req.params.all();
 
