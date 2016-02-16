@@ -331,7 +331,7 @@ module.exports.routes = {
      * @api {post} /api/mediaCategories/create create
      * @apiGroup mediaCategories
      *
-     * @apiParam {string} name mediaCategories name (required)
+     * @apiParam {string} title mediaCategories title (required)
      */
     'POST /api/mediaCategory/create': 'MediaCategory.create',
 

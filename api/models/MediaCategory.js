@@ -10,15 +10,19 @@ module.exports = {
     schema: true,
 
     attributes: {
-        name: {
+        title: {
             type: 'string',
-            required: true,
-            unique: true
+            required: true
         },
 
         media: {
             collection: 'media',
             via: 'categories'
+        },
+
+        tree: {
+            model: 'tree',
+            via: 'mediaCategories'
         }
     },
 

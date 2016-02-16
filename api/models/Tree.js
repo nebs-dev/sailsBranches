@@ -41,6 +41,11 @@ module.exports = {
         eventTypes: {
             collection: 'eventType',
             via: 'tree'
+        },
+
+        mediaCategories: {
+            collection: 'mediaCategory',
+            via: 'tree'
         }
     },
 

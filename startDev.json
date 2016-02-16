@@ -9,7 +9,8 @@
         "DB_NAME": "obris",
         "TOKEN_SECRET": "The answer is: GIANT 42! NINJA",
         "PORT": 1337,
-        "BLUEBIRD_W_FORGOTTEN_RETURN": false
+        "BLUEBIRD_WARNINGS": 1,
+        "BLUEBIRD_W_FORGOTTEN_RETURN": 0
       }
     }
   ]

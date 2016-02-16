@@ -6,6 +6,7 @@
  */
 
 var path = require('path');
+var fs = require('fs-extra');
 module.exports = {
 
     /**
@@ -31,16 +32,31 @@ module.exports = {
 
             params.url = path.basename(uploadedFiles[0].fd);
 
-            // Create media object and add it to branches from params
-            Media.create(params).then(function (media) {
-                mediaService.saveBranches(media, params.branches, function (err, media) {
-                    if (err) return res.negotiate(err);
+            // Create media object and add it to branches from params (check permissions first)
+            mediaService.checkBranches(req, function (err) {
+                if (err) {
+                    fs.remove(uploadedFiles[0].fd, function (err) {
+                        if (err) return cb(err);
+                        return res.unauthorized();
+                    });
 
-                    return res.ok(media);
-                });
+                } else {
+                    var categoryParams = _.clone(params);
+                    delete params.categories;
 
-            }).catch(function (err) {
-                return res.negotiate(err);
+                    Media.create(params).then(function (media) {
+                        mediaService.saveCategories(media, categoryParams, function (err, media) {
+                            if (err) return res.negotiate(err);
+                            return res.ok(media);
+                        });
+
+                    }).catch(function (err) {
+                        fs.remove(uploadedFiles[0].fd, function (err) {
+                            if (err) return cb(err);
+                            return res.negotiate(err);
+                        });
+                    });
+                }
             });
         });
     },

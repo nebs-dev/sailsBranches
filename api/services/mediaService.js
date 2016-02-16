@@ -1,19 +1,29 @@
 module.exports = {
 
     /**
-     * Add branches to media object
-     * @param media
-     * @param branches
+     * Check user permissions for branches
+     * @param req
      * @param cb
-     * @returns {*}
      */
-    saveBranches: function (media, branches, cb) {
-        if (!branches || !branches.length) return cb();
+    checkBranches: function (req, cb) {
+        var params = req.params.all();
+        if (!req.token) return cb({err: 'Token is mandatory'});
 
-        //media.branches.add(branches[0]);
-        media.save(function (err) {
-            if (err) return cb(err);
-            return cb(null, media);
+        // Find req user
+        User.findOne(req.token.userId).then(function (reqUser) {
+            return Permission.find({user: reqUser.id});
+
+        }).then(function (permissions) {
+            // Check if user added branch that is not allowed to him
+            var permittedBranches = _.pluck(permissions, 'branch');
+            var notAllowedBranches = _.difference(params.branches, permittedBranches);
+
+            if (notAllowedBranches.length) return cb({err: 'not allowed'});
+
+            return cb();
+
+        }).catch(function (err) {
+            return cb(err);
         });
     },
 
@@ -30,9 +40,9 @@ module.exports = {
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return cb();
 
-            return Media.findOne(file_id).populate('branches')
+            return [Media.findOne(file_id).populate('branches'), user];
 
-        }).then(function (media) {
+        }).spread(function (media, user) {
             if (!media) return callback({err: "file not found"});
 
             // Check if user have permission for this branch
@@ -47,6 +57,47 @@ module.exports = {
 
         }).catch(function (err) {
             return cb(err);
+        });
+    },
+
+
+    saveCategories: function (media, params, cb) {
+        if (!params.categories) return cb();
+
+        if (!(params.categories instanceof Array)) {
+            params.categories = [params.categories];
+        }
+
+        var mediaClone = _.clone(media);
+
+        async.map(params.categories, function (category, callback) {
+
+            MediaCategory.findOne({'title': category}).then(function (mediaCategory) {
+
+                if (!mediaCategory) {
+                    return MediaCategory.create({'title': category});
+                } else {
+                    return mediaCategory;
+                }
+
+            }).then(function (mCategory) {
+
+                media.categories.add(mCategory);
+                media.save(function (err) {
+                    if (err) return callback(err);
+
+                    mediaClone.categories.push(mCategory);
+                    return callback(null, mCategory);
+                });
+
+            }).catch(function (err) {
+                return cb(err);
+            });
+
+        }, function (err, data) {
+            if (err) return cb(err);
+
+            return cb(null, mediaClone);
         });
     }
 

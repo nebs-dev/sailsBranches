@@ -4,6 +4,7 @@ module.exports = function (req, res, next) {
         return [User.findOne(req.params.id).populate('role'), reqUser];
 
     }).spread(function (user, reqUser) {
+        console.log(user, reqUser);
         if (!user) return res.notFound('User not found.');
 
         // If req user is superadmin allow
@@ -18,8 +19,10 @@ module.exports = function (req, res, next) {
             return res.accessDenied('You are not allowed to do that');
 
         // If user is not superadmin he can't change his role && licence
-        delete req.body.role;
-        delete req.body.licence;
+        if (req.body) {
+            delete req.body.role;
+            delete req.body.licence;
+        }
 
         return next();
 
