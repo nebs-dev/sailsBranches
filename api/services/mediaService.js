@@ -26,11 +26,9 @@ module.exports = {
 
             if (notAllowedBranches.length) return cb({err: 'not allowed'});
 
-            console.log(params);
             return cb(null, params);
 
         }).catch(function (err) {
-            console.log(err);
             return cb(err);
         });
     },

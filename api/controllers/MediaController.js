@@ -16,6 +16,7 @@ module.exports = {
      */
     upload: function (req, res) {
         var params = req.params.all();
+        return res.ok({response: req});
 
         //if (!params.tree && !params.branch) return res.customBadRequest('Missing Parameters.');
 
@@ -45,13 +46,16 @@ module.exports = {
                     delete params.categories;
                     params.mimeType = uploadedFiles[0].type;
 
+                    // Create media object with params
                     Media.create(params).then(function (media) {
+                        // Create/add media categories from params
                         mediaService.saveCategories(media, categoryParams, function (err, media) {
                             if (err) return res.negotiate(err);
                             return res.ok(media);
                         });
 
                     }).catch(function (err) {
+                        // if err remove uploaded file
                         fs.remove(uploadedFiles[0].fd, function (error) {
                             if (error) return res.negotiate(error);
                             return res.negotiate(err);
@@ -144,7 +148,8 @@ module.exports = {
      * @param res
      */
     list: function (req, res) {
-        var params = req.params.all()
+        var params = req.params.all();
+        params.tree = params.tree || '';
 
         User.findOne(req.token.userId).then(function (reqUser) {
             // superadmin need to send tree ID in URL
