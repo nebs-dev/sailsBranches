@@ -77,6 +77,7 @@ module.exports.policies = {
     'MediaController': {
         'getOne': ['tokenAuth', 'mediaAccess'],
         'upload': ['tokenAuth', 'isProf'],
+        'list': ['tokenAuth', 'isSuperprof'],
         '*': true
     },
 

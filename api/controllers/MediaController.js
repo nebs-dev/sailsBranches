@@ -33,7 +33,7 @@ module.exports = {
             params.url = path.basename(uploadedFiles[0].fd);
 
             // Create media object and add it to branches from params (check permissions first)
-            mediaService.checkBranches(req, function (err) {
+            mediaService.checkBranches(req, function (err, params) {
                 if (err) {
                     fs.remove(uploadedFiles[0].fd, function (err) {
                         if (err) return cb(err);
@@ -133,6 +133,27 @@ module.exports = {
 
         Branch.findOne(params.id).populate('media').then(function (branch) {
             return res.json(branch.media);
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
+    /**
+     * List all media by tree
+     * @param req
+     * @param res
+     */
+    list: function (req, res) {
+        var params = req.params.all()
+
+        User.findOne(req.token.userId).then(function (reqUser) {
+            // superadmin need to send tree ID in URL
+            var tree = reqUser === 'superadmin' ? params.tree : reqUser.tree;
+            return Media.find({tree: tree});
+
+        }).then(function (media) {
+            return res.ok(media);
+
         }).catch(function (err) {
             return res.negotiate(err);
         });

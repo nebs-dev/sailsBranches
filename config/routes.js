@@ -357,9 +357,9 @@ module.exports.routes = {
      * @apiGroup Media
      *
      * @apiParam {string} title media title (required)
-     * @apiParam {string} url media url
-     * @apiParam {integer} tree Tree ID (required)
+     * @apiParam {integer} tree Tree ID (required if superadmin)
      * @apiParam {array} branches Branches IDs
+     * @apiParam {array} categories media categories (array of strings)
      * @apiParam {file} fileToUpload media to upload (required)
      */
     'POST /api/media/upload': 'Media.upload',
@@ -375,6 +375,12 @@ module.exports.routes = {
      * @apiGroup Media
      */
     'GET /api/media/getByBranch/:id': 'Media.getByBranch',
+
+    /**
+     * @api {get} /api/media/list?tree=testTreeId get all Files in Tree
+     * @apiGroup Media
+     */
+    'GET /api/media/list': 'Media.list',
 
 
     ///////////////////////////

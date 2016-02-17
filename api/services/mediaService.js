@@ -10,7 +10,13 @@ module.exports = {
         if (!req.token) return cb({err: 'Token is mandatory'});
 
         // Find req user
-        User.findOne(req.token.userId).then(function (reqUser) {
+        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
+            if ((!params.branches || !params.branches.length) && !reqUser.role.add_branch)
+                return cb({err: 'not allowed'});
+
+            // Superadmin needs to send tree ID
+            if (reqUser.role.name !== 'superadmin') params.tree = reqUser.tree;
+
             return Permission.find({user: reqUser.id});
 
         }).then(function (permissions) {
@@ -20,9 +26,11 @@ module.exports = {
 
             if (notAllowedBranches.length) return cb({err: 'not allowed'});
 
-            return cb();
+            console.log(params);
+            return cb(null, params);
 
         }).catch(function (err) {
+            console.log(err);
             return cb(err);
         });
     },
@@ -107,17 +115,6 @@ module.exports = {
             // return media with categories
             return cb(null, mediaClone);
         });
-    },
-
-
-    /**
-     * Get uploaded media type
-     * @param uploadedFile
-     * @param cb
-     */
-    getMediaType: function (uploadedFile, cb) {
-        var photoTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        var videoTypes = ['video/avi']
     }
 
 };

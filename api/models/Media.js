@@ -73,7 +73,15 @@ module.exports = {
         }
     },
 
+    /**
+     * Media type before validate
+     * @param values
+     * @param cb
+     * @returns {*}
+     */
     beforeValidate: function (values, cb) {
+        if (values.type === 'custom') return cb();
+
         var type = values.mimeType.split('/')[0];
         var mediaType = (type === 'application' || type === 'text') ? 'document' : type;
 
