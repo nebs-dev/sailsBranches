@@ -16,8 +16,6 @@ module.exports = {
      */
     upload: function (req, res) {
         var params = req.params.all();
-        return res.ok({response: req});
-
         //if (!params.tree && !params.branch) return res.customBadRequest('Missing Parameters.');
 
         req.file('fileToUpload').upload({
