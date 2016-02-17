@@ -60,9 +60,15 @@ module.exports = {
         });
     },
 
-
+    /**
+     * Save/create file categories
+     * @param media
+     * @param params
+     * @param cb
+     * @returns {*}
+     */
     saveCategories: function (media, params, cb) {
-        if (!params.categories) return cb();
+        if (!params.categories) return cb(null, media);
 
         if (!(params.categories instanceof Array)) {
             params.categories = [params.categories];
@@ -70,10 +76,12 @@ module.exports = {
 
         var mediaClone = _.clone(media);
 
+        // each param.categories
         async.map(params.categories, function (category, callback) {
-
+            // find category by title
             MediaCategory.findOne({'title': category}).then(function (mediaCategory) {
 
+                // if category not found, create it
                 if (!mediaCategory) {
                     return MediaCategory.create({'title': category});
                 } else {
@@ -81,7 +89,7 @@ module.exports = {
                 }
 
             }).then(function (mCategory) {
-
+                // add found/created category to media
                 media.categories.add(mCategory);
                 media.save(function (err) {
                     if (err) return callback(err);
@@ -96,9 +104,20 @@ module.exports = {
 
         }, function (err, data) {
             if (err) return cb(err);
-
+            // return media with categories
             return cb(null, mediaClone);
         });
+    },
+
+
+    /**
+     * Get uploaded media type
+     * @param uploadedFile
+     * @param cb
+     */
+    getMediaType: function (uploadedFile, cb) {
+        var photoTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        var videoTypes = ['video/avi']
     }
 
 };

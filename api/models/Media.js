@@ -10,7 +10,7 @@ module.exports = {
 
     types: {
         checkType: function (model) {
-            if(this.type !== 'custom') return true;
+            if (this.type !== 'custom') return true;
 
             var availableModels = generalHelper.getTypeModels();
             return availableModels.indexOf(model) !== -1 && this.relationKey;
@@ -42,7 +42,12 @@ module.exports = {
 
         type: {
             type: 'string',
-            enum: ['photo', 'video', 'document', 'audio', 'custom'],
+            enum: ['image', 'video', 'document', 'audio', 'custom'],
+            required: true
+        },
+
+        mimeType: {
+            type: 'string',
             required: true
         },
 
@@ -66,6 +71,14 @@ module.exports = {
             obj.url = sails.getBaseurl() + '/uploads/media/' + obj.url;
             return obj;
         }
+    },
+
+    beforeValidate: function (values, cb) {
+        var type = values.mimeType.split('/')[0];
+        var mediaType = (type === 'application' || type === 'text') ? 'document' : type;
+
+        values.type = mediaType;
+        cb();
     },
 
     /**

@@ -43,6 +43,7 @@ module.exports = {
                 } else {
                     var categoryParams = _.clone(params);
                     delete params.categories;
+                    params.mimeType = uploadedFiles[0].type;
 
                     Media.create(params).then(function (media) {
                         mediaService.saveCategories(media, categoryParams, function (err, media) {
@@ -51,8 +52,8 @@ module.exports = {
                         });
 
                     }).catch(function (err) {
-                        fs.remove(uploadedFiles[0].fd, function (err) {
-                            if (err) return cb(err);
+                        fs.remove(uploadedFiles[0].fd, function (error) {
+                            if (error) return res.negotiate(error);
                             return res.negotiate(err);
                         });
                     });
