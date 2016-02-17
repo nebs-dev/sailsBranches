@@ -82,7 +82,7 @@ module.exports.policies = {
     },
 
     'MediaCategoryController': {
-        '*': ['tokenAuth', 'isSuperadmin']
+        '*': ['tokenAuth', 'isSuperprof']
     },
 
     'EventController': {

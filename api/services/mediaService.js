@@ -95,14 +95,7 @@ module.exports = {
                 }
 
             }).then(function (mCategory) {
-                // add found/created category to media
-                media.categories.add(mCategory);
-                media.save(function (err) {
-                    if (err) return callback(err);
-
-                    mediaClone.categories.push(mCategory);
-                    return callback(null, mCategory);
-                });
+                return callback(null, mCategory);
 
             }).catch(function (err) {
                 return cb(err);
@@ -110,8 +103,16 @@ module.exports = {
 
         }, function (err, data) {
             if (err) return cb(err);
-            // return media with categories
-            return cb(null, mediaClone);
+
+            // add found/created category to media
+            media.categories.add(data);
+            media.save({populate: true}, function (err) {
+                if (err) return callback(err);
+
+                mediaClone.categories = data;
+                // return media with categories
+                return cb(null, mediaClone);
+            });
         });
     }
 

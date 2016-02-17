@@ -341,6 +341,12 @@ module.exports.routes = {
      */
     'POST /api/mediaCategory/destroy/:id': 'MediaCategory.destroy',
 
+    /**
+     * @api {get} /api/mediaCategory/show/:id show
+     * @apiGroup mediaCategories
+     */
+    'GET /api/mediaCategory/show/:id': 'MediaCategory.show',
+
     ///////////////////////////
     ////////// MEDIA //////////
     ///////////////////////////

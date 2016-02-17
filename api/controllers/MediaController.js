@@ -47,6 +47,7 @@ module.exports = {
                     // Create media object with params
                     Media.create(params).then(function (media) {
                         // Create/add media categories from params
+                        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>');
                         mediaService.saveCategories(media, categoryParams, function (err, media) {
                             if (err) return res.negotiate(err);
                             return res.ok(media);

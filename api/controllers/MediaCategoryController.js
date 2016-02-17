@@ -46,6 +46,14 @@ module.exports = {
         }).catch(function (err) {
            return res.negotiate(err);
         });
+    },
+
+    show: function (req, res) {
+        MediaCategory.findOne(req.params.id).populate('media').then(function (category) {
+            return res.ok(category);
+        }).catch(function (err) {
+           return res.negotiate(err);
+        });
     }
 
 };
