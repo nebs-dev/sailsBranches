@@ -3,7 +3,7 @@
     {
       "name": "obris-DEV",
       "script": "app.js",
-      "watch": false,
+      "watch": true,
       "env": {
         "NODE_ENV": "development",
         "DB_NAME": "obris",
