@@ -96,6 +96,27 @@ module.exports = {
     },
 
     /**
+     * Update tree
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var params = req.params.all();
+        delete params.licence;
+
+        User.findOne(req.token.userId).then(function (reqUser) {
+            if ((reqUser.tree !== params.id) && reqUser.role.name !== 'superadmin') return res.unauthorized();
+            return Tree.update(params.id, params);
+
+        }).then(function (tree) {
+            return res.ok(tree[0]);
+
+        }).catch(function (err) {
+           return res.negotiate(err);
+        });
+    },
+
+    /**
      * Get all users from tree
      * @param req
      * @param res

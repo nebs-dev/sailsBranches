@@ -82,10 +82,10 @@ module.exports = {
 
             // Calculate level
             values.level = values.parents.length;
-            cb();
+            return cb();
 
         }).catch(function (err) {
-            cb(err);
+            return cb(err);
         });
     },
 
@@ -102,9 +102,9 @@ module.exports = {
         };
 
         Permission.create(permissionData).then(function (permission) {
-            cb();
+            return cb();
         }).catch(function (err) {
-            cb(err);
+            return cb(err);
         });
     },
 
@@ -123,47 +123,48 @@ module.exports = {
             if (!updatedChild) return cb('Not found');
 
             // If parent didn't change return
-            if ((valuesToBeUpdated.parent == updatedChild.parent || !valuesToBeUpdated.parent)) return cb();
+            if (!valuesToBeUpdated.parent || (valuesToBeUpdated.parent == updatedChild.parent)) return cb();
 
             // Get future parent of this updated child
-            return [Branch.findOne(valuesToBeUpdated.parent), valuesToBeUpdated];
+            Branch.findOne(valuesToBeUpdated.parent).then(function (parent) {
+                if (!parent) return cb('Not found');
 
-        }).spread(function (parent, valuesToBeUpdated) {
-            if (!parent) return cb('Not found');
+                // check if updatedChild is parent of new parent - forbid
+                if (_.contains(parent.parents, updatedChild.id)) return cb('Wrong parent');
 
-            // check if updatedChild is parent of new parent - forbid
-            if (_.contains(parent.parents, updatedChild.id)) return cb('Wrong parent');
+                // if parent level is 0
+                parent = parent || {};
 
-            // if parent level is 0
-            parent = parent || {};
-
-            // Update this child with its parent parents and add current parent to that
-            valuesToBeUpdated.parents = parent.parents ? _.clone(parent.parents) : [];
-            if (parent.id) {
-                valuesToBeUpdated.parents.push(parent.id);
-            }
-
-            // Calculate level
-            valuesToBeUpdated.level = valuesToBeUpdated.parents.length;
-
-            // add Parents for updatedChild children ( valuesToBeUpdated.parents + valuesToBeUpdated.id )
-            var parents = _.clone(valuesToBeUpdated.parents);
-            parents.push(valuesToBeUpdated.id);
-
-            // Update parents of every updatedChild children
-            _.each(updatedChild.children, function (child) {
-                child.parents = parents;
+                // Update this child with its parent parents and add current parent to that
+                valuesToBeUpdated.parents = parent.parents ? _.clone(parent.parents) : [];
+                if (parent.id) {
+                    valuesToBeUpdated.parents.push(parent.id);
+                }
 
                 // Calculate level
-                child.level = child.parents.length;
+                valuesToBeUpdated.level = valuesToBeUpdated.parents.length;
 
-                child.save();
+                // add Parents for updatedChild children ( valuesToBeUpdated.parents + valuesToBeUpdated.id )
+                var parents = _.clone(valuesToBeUpdated.parents);
+                parents.push(valuesToBeUpdated.id);
+
+                // Update parents of every updatedChild children
+                _.each(updatedChild.children, function (child) {
+                    child.parents = parents;
+
+                    // Calculate level
+                    child.level = child.parents.length;
+
+                    child.save();
+                });
+
+                return cb();
+
+            }).catch(function (err) {
+                return cb(err);
             });
-
-            cb();
-
         }).catch(function (err) {
-            cb(err);
+            return cb(err);
         });
     },
 

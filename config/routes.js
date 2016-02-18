@@ -286,10 +286,18 @@ module.exports.routes = {
     'POST /api/tree/create': 'Tree.create',
 
     /**
-     * @api {post} /api/tree/destroy destroy
+     * @api {post} /api/tree/destroy/:id destroy
      * @apiGroup Tree
      */
     'POST /api/tree/destroy/:id': 'Tree.destroy',
+
+    /**
+     * @api {post} /api/tree/update/:id update
+     * @apiGroup Tree
+     *
+     * @apiParam {string} name Tree name
+     */
+    'POST /api/tree/update/:id': 'Tree.update',
 
     /**
      * @api {post} /api/tree/addLicence add Licence to Tree
@@ -328,7 +336,7 @@ module.exports.routes = {
     'GET /api/mediaCategories': 'MediaCategory.list',
 
     /**
-     * @api {post} /api/mediaCategories/create create
+     * @api {post} /api/mediaCategory/create create
      * @apiGroup mediaCategories
      *
      * @apiParam {string} title mediaCategories title (required)

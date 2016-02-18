@@ -71,6 +71,7 @@ module.exports.policies = {
 
     'TreeController': {
         'getAllUsers': ['tokenAuth', 'isSuperprof'],
+        'update': ['tokenAuth', 'isSuperprof'],
         '*': ['tokenAuth', 'isSuperadmin']
     },
 

@@ -13,20 +13,21 @@ module.exports = {
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return callback(null, user, null);
 
-            return [user, Branch.findOne(branch_id)];
+            Branch.findOne(branch_id).then(function (branch) {
+                if (!branch) return callback({err: "branch not found"});
 
-        }).spread(function (user, branch) {
-            if (!branch) return callback({err: "branch not found"});
+                // Check if user have permission for this branch
+                var permittedBranches = _.pluck(user.permissions, 'branch');
+                if (permittedBranches.indexOf(branch.id) > -1) return callback(null, user, branch);
 
-            // Check if user have permission for this branch
-            var permittedBranches = _.pluck(user.permissions, 'branch');
-            if (permittedBranches.indexOf(branch.id) > -1) return callback(null, user, branch);
+                // Check if user have permission for any of this branch parents
+                var allowedParents = _.intersection(permittedBranches, branch.parents);
+                if (!allowedParents.length) return callback({err: "not allowed"});
 
-            // Check if user have permission for any of this branch parents
-            var allowedParents = _.intersection(permittedBranches, branch.parents);
-            if (!allowedParents.length) return callback({err: "not allowed"});
-
-            return callback(null, user, branch);
+                return callback(null, user, branch);
+            }).catch(function (err) {
+               return callback(err);
+            });
 
         }).catch(function (err) {
             return callback(err);

@@ -61,7 +61,7 @@ module.exports.bootstrap = function (cb) {
                     if (user) return cb();
 
                     Role.findOne({'name': 'superadmin'}).then(function (superadminRole) {
-                        if (!role) return res.notFound('Superadmin role not found');
+                        if (!superadminRole) return res.notFound('Superadmin role not found');
 
                         var userParams = {
                             'email': 'nebs@gmail.com',

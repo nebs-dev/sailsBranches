@@ -46,21 +46,22 @@ module.exports = {
             // If user is superadmin allow
             if (user.role && user.role.name == 'superadmin') return cb();
 
-            return [Media.findOne(file_id).populate('branches'), user];
+            Media.findOne(file_id).populate('branches').then(function (media) {
+                if (!media) return callback({err: "file not found"});
 
-        }).spread(function (media, user) {
-            if (!media) return callback({err: "file not found"});
+                // Check if user have permission for this branch
+                var permittedBranches = _.pluck(user.permissions, 'branch');
+                var fileBranches = _.pluck(media.branches, 'id');
 
-            // Check if user have permission for this branch
-            var permittedBranches = _.pluck(user.permissions, 'branch');
-            var fileBranches = _.pluck(media.branches, 'id');
+                // If intersection between file branches && user branches return min one result - allow
+                var allowedBranches = _.intersection(permittedBranches, fileBranches);
+                if (!allowedBranches.length) return cb({err: "not allowed"});
 
-            // If intersection between file branches && user branches return min one result - allow
-            var allowedBranches = _.intersection(permittedBranches, fileBranches);
-            if (!allowedBranches.length) return cb({err: "not allowed"});
+                return cb();
 
-            return cb();
-
+            }).catch(function (err) {
+                return cb(err);
+            });
         }).catch(function (err) {
             return cb(err);
         });

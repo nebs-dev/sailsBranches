@@ -20,7 +20,7 @@ module.exports = {
         if (!email || !password) return res.customBadRequest('Missing Parameters.');
 
         // Find user by email
-        User.findOneByEmail(email).populate('role').then(function (user) {
+        User.findOneByEmail(email).populate(['role', 'branches', 'permissions']).then(function (user) {
             if (!user) return res.accessDenied('Invalid email or password');
 
             // validate user password
@@ -63,7 +63,10 @@ module.exports = {
 
         }).spread(function (role, tree) {
             // Create user in tree && add role to him
-            return [User.create({role: role.id, tree: tree.id, email: params.email, password: params.password}), tree];
+            params.role = role.id;
+            params.tree = tree.id;
+
+            return [User.create(params), tree];
 
         }).spread(function (user, tree) {
             var token = sailsTokenAuth.issueToken({userId: user.id, secret: user.secret});

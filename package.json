@@ -9,6 +9,7 @@
     "fs-extra": "^0.26.2",
     "include-all": "~0.1.6",
     "jsonwebtoken": "^5.4.0",
+    "mocha": "^2.4.5",
     "rc": "1.0.1",
     "sails": "~0.12.0",
     "sails-disk": "~0.10.9",
@@ -16,7 +17,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "debug": "node debug app.js"
+    "debug": "node debug app.js",
+    "test": "BLUEBIRD_W_FORGOTTEN_RETURN=0 node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/**/*.test.js"
   },
   "main": "app.js",
   "repository": {
@@ -28,5 +30,8 @@
   "apidoc": {
     "title": "Obris documentation",
     "version": "0.1.0"
+  },
+  "devDependencies": {
+    "supertest": "^1.2.0"
   }
 }

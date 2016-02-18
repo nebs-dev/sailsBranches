@@ -34,15 +34,13 @@ module.exports = function (req, res, next) {
         return [Licence.findOne(user.tree.licence), parent, user];
 
     }).spread(function (licence, parent, user) {
-
         // Set level
         var level = parent ? parent.level + 1 : 0;
 
         // Get branches in this level
-        return [Branch.find({where: {level: level, tree: user.tree.id}}), licence];
+        return [Branch.find({where: {level: level, tree: user.tree.id}}), licence, level];
 
-    }).then(function (levelBranches, licence) {
-
+    }).spread(function (levelBranches, licence, level) {
         // horizontal check
         if (levelBranches.length + 1 > licence.horizontal)
             return res.accessDenied('Maximum branches in this level reached.');
