@@ -28,7 +28,11 @@ module.exports = {
         });
     },
 
-
+    /**
+     * Get list of branches for "student" role
+     * @param req
+     * @param res
+     */
     studentList: function (req, res) {
         User.findOne(req.token.userId).populate('permissions').then(function (user) {
 

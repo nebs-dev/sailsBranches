@@ -67,28 +67,21 @@ module.exports = {
         }, function (err) {
             if (err) return cb(err);
 
-            var levels = _.toArray(_.groupBy(allBranches, 'level'));
-
-            //return cb(null, allBranches);
-
             // If !tree return all branches in one level
-            var uniqueBranches = _.uniq(allBranches, function (item, key, id) {
-                return item.id;
-            });
-            if (!tree) return cb(null, uniqueBranches);
-
-            // Length = 1, 2, 3 / array = 0, 1, 2 => and we don't look last level because it don't have children, so length-2
-            for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
-                _.each(levels[levelNo], function (level) {
-                    _.each(level.children, function (child, key) {
-                        var childFound = _.findWhere(allBranches, {parent: level.id});
-                        level.children[key] = childFound;
-                        if (childFound) delete childFound.parent;
-                    });
+            if (!tree)  {
+                var uniqueBranches = _.uniq(allBranches, function (item, key, id) {
+                    return item.id;
                 });
+                return cb(null, uniqueBranches);
             }
 
-            return cb(null, levels[0]);
+            // group branches by level
+            var levels = _.toArray(_.groupBy(allBranches, 'level'));
+            // Get all levels in tree form
+            branchService.getLevelsTree(levels, allBranches, function(err, levels) {
+                if (err) return cb(err);
+                return cb(null, levels);
+            });
         });
     },
 
@@ -98,8 +91,9 @@ module.exports = {
      * @param tree
      * @param cb
      */
-    studentList: function (children, tree, cb) {
+    studentList: function (children, cb) {
         Branch.find(children).then(function (branches) {
+            // Get all branches (permitted branches and all its parents)
             var allParents = _.flatten(_.pluck(branches, 'parents'));
             var permittedBranches = _.pluck(branches, 'id');
             var allBranchIDs = _.uniq(_.union(allParents, permittedBranches));
@@ -111,23 +105,40 @@ module.exports = {
                 return b.toJSON();
             });
 
+            // group branches by level
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
 
-            for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
-                _.each(levels[levelNo], function (level) {
-                    _.each(level.children, function (child, key) {
-                        var childFound = _.findWhere(allBranches, {parent: level.id});
-                        level.children[key] = childFound;
-                        if (childFound) delete childFound.parent;
-                    });
-                });
-            }
-
-            return cb(null, levels[0]);
+            // Get all levels in tree form
+            branchService.getLevelsTree(levels, allBranches, function(err, levels) {
+                if (err) return cb(err);
+                return cb(null, levels);
+            });
 
         }).catch(function (err) {
             return cb(err);
         });
+    },
+
+    /**
+     * Get all levels in tree form
+     * @param levels
+     * @param allBranches
+     * @param cb
+     * @returns {*}
+     */
+    getLevelsTree: function (levels, allBranches, cb) {
+        // Length = 1, 2, 3 / array = 0, 1, 2 => and we don't look last level because it don't have children, so length-2
+        for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
+            _.each(levels[levelNo], function (level) {
+                _.each(level.children, function (child, key) {
+                    var childFound = _.findWhere(allBranches, {parent: level.id});
+                    level.children[key] = childFound;
+                    if (childFound) delete childFound.parent;
+                });
+            });
+        }
+
+        return cb(null, levels[0]);
     },
 
     /**
@@ -145,7 +156,7 @@ module.exports = {
                 return cb(null, users);
             });
 
-            // multiple levels
+        // multiple levels
         } else {
             var children = [];
             children.push(params.id);
