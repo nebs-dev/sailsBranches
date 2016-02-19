@@ -44,12 +44,8 @@ module.exports = {
         var params = req.params.all();
 
         User.create(params).then(function (user) {
-            return [user.toJSON(), Role.findOne(params.role)];
-        }).spread(function (user, role) {
-            user.role = role;
-            return [Permission.find({user: user.id}), user];
-        }).spread(function (permissions, user) {
-            user.permissions = permissions || [];
+            return User.findOne(user.id).populate(['role', 'permissions']);
+        }).then(function (user) {
             return res.ok(user);
 
         }).catch(function (err) {
@@ -66,9 +62,8 @@ module.exports = {
         var params = req.params.all();
 
         User.update(req.params.id, params).then(function (user) {
-            return [Permission.find({user: user.id}), user[0].toJSON()];
-        }).spread(function (permissions, user) {
-            user.permissions = permissions || [];
+            return User.findOne(user[0].id).populate(['role', 'permissions']);
+        }).then(function (user) {
             return res.ok(user);
 
         }).catch(function (err) {
