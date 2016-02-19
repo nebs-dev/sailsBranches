@@ -31,7 +31,7 @@ module.exports = {
         var params = req.params.all();
 
         Licence.update(req.params.id, params).then(function(licence) {
-            return res.json(licence);
+            return res.ok(licence);
         }).catch(function (err) {
             return res.negotiate(err);
         });

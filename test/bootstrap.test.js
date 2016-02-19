@@ -1,5 +1,4 @@
-var sails = require('sails'),
-    sails;
+var sails = require('sails');
 
 before(function (done) {
 

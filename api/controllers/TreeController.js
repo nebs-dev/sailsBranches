@@ -102,10 +102,10 @@ module.exports = {
      */
     update: function (req, res) {
         var params = req.params.all();
-        delete params.licence;
 
-        User.findOne(req.token.userId).then(function (reqUser) {
+        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
             if ((reqUser.tree !== params.id) && reqUser.role.name !== 'superadmin') return res.unauthorized();
+            if (reqUser.role.name !== 'superadmin') delete params.licence;
             return Tree.update(params.id, params);
 
         }).then(function (tree) {
@@ -122,7 +122,7 @@ module.exports = {
      * @param res
      */
     getAllUsers: function (req, res) {
-        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
+        User.findOne(req.token.userId).populate(['role', 'permissions']).then(function (reqUser) {
             var options;
 
             // user get users from all trees

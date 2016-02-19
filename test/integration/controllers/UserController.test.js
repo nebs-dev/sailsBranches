@@ -45,19 +45,6 @@ describe('User', function(){
                             var response = JSON.parse(res.text);
                             next(null, token, branches, response);
                         });
-                },
-                function addPermissionStudent(token, branches, student, next) {
-                    request(url)
-                        .post('/api/permission/add')
-                        .send({ user: student.id, branch: branches[0].id })
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token, branches, response);
-                        });
                 }
             ],
             function finish(err, result) {
@@ -65,40 +52,5 @@ describe('User', function(){
             }
         );
 
-    });
-
-
-    it('Login student and try to access branch', function(done) {
-        async.waterfall(
-            [
-                function login(next) {
-                    request(url)
-                        .post('/api/auth/login')
-                        .send({ email: 'novoselac@gmail.com', password: '123' })
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) JSON.parse(res.text);
-
-                            var response = JSON.parse(res.text);
-                            next(null, response.token, response.user);
-                        });
-                },
-                function accessBranch(token, user, next) {
-                    request(url)
-                        .get('/api/branch/' + user.permissions[0].branch)
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token, response);
-                        });
-                }
-            ],
-            function finish(err, result) {
-                done(err);
-            }
-        );
     });
 });
