@@ -122,7 +122,7 @@ module.exports = {
      * @param res
      */
     getAllUsers: function (req, res) {
-        User.findOne(req.token.userId).populate(['role', 'permissions']).then(function (reqUser) {
+        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
             var options;
 
             // user get users from all trees
@@ -132,7 +132,7 @@ module.exports = {
                 };
             }
 
-            return [reqUser, User.find(options).populate('role').populate('tree')]
+            return [reqUser, User.find(options).populate(['role', 'permissions']).populate('tree')]
 
         }).spread(function (reqUser, users) {
             // only superadmin can see superadmins in list
