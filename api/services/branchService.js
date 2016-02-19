@@ -69,6 +69,8 @@ module.exports = {
 
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
 
+            //return cb(null, allBranches);
+
             // If !tree return all branches in one level
             var uniqueBranches = _.uniq(allBranches, function (item, key, id) {
                 return item.id;
@@ -87,6 +89,44 @@ module.exports = {
             }
 
             return cb(null, levels[0]);
+        });
+    },
+
+    /**
+     * Get branch list for student
+     * @param children
+     * @param tree
+     * @param cb
+     */
+    studentList: function (children, tree, cb) {
+        Branch.find(children).then(function (branches) {
+            var allParents = _.flatten(_.pluck(branches, 'parents'));
+            var permittedBranches = _.pluck(branches, 'id');
+            var allBranchIDs = _.uniq(_.union(allParents, permittedBranches));
+
+            return Branch.find(allBranchIDs).populate('children');
+
+        }).then(function (allBranches) {
+            allBranches = _.map(allBranches, function(b) {
+                return b.toJSON();
+            });
+
+            var levels = _.toArray(_.groupBy(allBranches, 'level'));
+
+            for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
+                _.each(levels[levelNo], function (level) {
+                    _.each(level.children, function (child, key) {
+                        var childFound = _.findWhere(allBranches, {parent: level.id});
+                        level.children[key] = childFound;
+                        if (childFound) delete childFound.parent;
+                    });
+                });
+            }
+
+            return cb(null, levels[0]);
+
+        }).catch(function (err) {
+            return cb(err);
         });
     },
 

@@ -24,9 +24,27 @@ module.exports = {
             });
 
         }).catch(function (err) {
-            return res.json(err);
+            return res.negotiate(err);
         });
     },
+
+
+    studentList: function (req, res) {
+        User.findOne(req.token.userId).populate('permissions').then(function (user) {
+
+            var children = _.pluck(user.permissions, 'branch');
+
+            branchService.studentList(children, true, function (err, branches) {
+                if (err) return res.negotiate(err);
+
+                return res.ok(branches);
+            });
+
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
+    },
+
 
     /**
      * Get single branch and its children

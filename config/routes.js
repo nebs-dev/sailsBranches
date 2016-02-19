@@ -177,6 +177,12 @@ module.exports.routes = {
     'GET /api/branches': 'Branch.list',
 
     /**
+     * @api {get} /api/student/branches list
+     * @apiGroup Branch
+     */
+    'GET /api/student/branches': 'Branch.studentList',
+
+    /**
      * @api {get} /api/branch/:id Branch data
      * @apiGroup Branch
      */
@@ -234,7 +240,7 @@ module.exports.routes = {
      * @apiGroup Permission
      *
      * @apiParam {integer} user User ID (required)
-     * @apiParam {integer} branch Branch ID (required)
+     * @apiParam {array} branches Branch IDs (required)
      */
     'POST /api/permission/add': 'Permission.add',
 

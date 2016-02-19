@@ -4,6 +4,10 @@ module.exports = function (req, res, next) {
     if (!req.token || !req.token.userId) return res.accessDenied('You are not allowed to do that');
     if (!params.branches || !params.branches.length) return res.customBadRequest('Missing parameters.');
 
+    if (!(params.branches instanceof Array)) {
+        params.branches = [params.branches];
+        req.body.branches = params.branches;
+    }
 
     async.each(params.branches, function (branch, cb) {
 
