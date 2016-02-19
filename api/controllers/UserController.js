@@ -44,12 +44,12 @@ module.exports = {
         var params = req.params.all();
 
         User.create(params).then(function (user) {
-            return [user, Role.findOne(params.role)];
+            return [user.toJSON(), Role.findOne(params.role)];
         }).spread(function (user, role) {
             user.role = role;
             return [Permission.find({user: user.id}), user];
         }).spread(function (permissions, user) {
-            user.permissions = permissions;
+            user.permissions = permissions || [];
             return res.ok(user);
 
         }).catch(function (err) {
@@ -66,10 +66,10 @@ module.exports = {
         var params = req.params.all();
 
         User.update(req.params.id, params).then(function (user) {
-            return Permission.find({user: user.id});
+            return [Permission.find({user: user.id}), user[0].toJSON()];
         }).spread(function (permissions, user) {
-            user.permissions = permissions;
-            return res.json(user);
+            user.permissions = permissions || [];
+            return res.ok(user);
 
         }).catch(function (err) {
             return res.negotiate(err);

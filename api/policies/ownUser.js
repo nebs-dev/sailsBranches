@@ -4,7 +4,6 @@ module.exports = function (req, res, next) {
         return [User.findOne(req.params.id).populate('role'), reqUser];
 
     }).spread(function (user, reqUser) {
-        console.log(user, reqUser);
         if (!user) return res.notFound('User not found.');
 
         // If req user is superadmin allow
