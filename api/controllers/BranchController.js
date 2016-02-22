@@ -38,7 +38,7 @@ module.exports = {
 
             var children = _.pluck(user.permissions, 'branch');
 
-            branchService.studentList(children, true, function (err, branches) {
+            branchService.studentList(children, function (err, branches) {
                 if (err) return res.negotiate(err);
 
                 return res.ok(branches);

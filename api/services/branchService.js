@@ -132,7 +132,8 @@ module.exports = {
             _.each(levels[levelNo], function (level) {
                 _.each(level.children, function (child, key) {
                     var childFound = _.findWhere(allBranches, {parent: level.id});
-                    level.children[key] = childFound;
+                    if (childFound) level.children[key] = childFound;
+
                     if (childFound) delete childFound.parent;
                 });
             });
