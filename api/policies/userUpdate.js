@@ -2,7 +2,7 @@ module.exports = function (req, res, next) {
     var params = req.params.all();
 
     // Find req user object
-    User.findOne(req.token.userId).then(function (reqUser) {
+    User.findOne(req.token.userId).populate('role').then(function (reqUser) {
 
         // user email must be unique in one tree
         return [User.findOne({email: params.email, tree: params.tree}), User.findOne(req.params.id), reqUser];

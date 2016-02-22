@@ -20,7 +20,7 @@ module.exports = {
         if (!email || !password) return res.customBadRequest('Missing Parameters.');
 
         // Find user by email
-        User.findOneByEmail(email).populate(['role', 'branches', 'permissions']).then(function (user) {
+        User.findOneByEmail(email).populate(['role', 'permissions']).then(function (user) {
             if (!user) return res.accessDenied('Invalid email or password');
 
             // validate user password

@@ -177,7 +177,7 @@ module.exports.routes = {
     'GET /api/branches': 'Branch.list',
 
     /**
-     * @api {get} /api/student/branches list
+     * @api {get} /api/student/branches list student
      * @apiGroup Branch
      */
     'GET /api/student/branches': 'Branch.studentList',
