@@ -26,7 +26,7 @@ module.exports = {
 
                 return callback(null, user, branch);
             }).catch(function (err) {
-               return callback(err);
+                return callback(err);
             });
 
         }).catch(function (err) {
@@ -67,18 +67,20 @@ module.exports = {
         }, function (err) {
             if (err) return cb(err);
 
+            allBranches = _.uniq(allBranches, function (item, key, id) {
+                return item.id;
+            });
+
             // If !tree return all branches in one level
-            if (!tree)  {
-                var uniqueBranches = _.uniq(allBranches, function (item, key, id) {
-                    return item.id;
-                });
-                return cb(null, uniqueBranches);
+            if (!tree) {
+                return cb(null, allBranches);
             }
 
             // group branches by level
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
+
             // Get all levels in tree form
-            branchService.getLevelsTree(levels, allBranches, function(err, levels) {
+            branchService.getLevelsTree(levels, allBranches, function (err, levels) {
                 if (err) return cb(err);
                 return cb(null, levels);
             });
@@ -93,15 +95,17 @@ module.exports = {
      */
     studentList: function (children, cb) {
         Branch.find(children).then(function (branches) {
+
+
             // Get all branches (permitted branches and all its parents)
             var allParents = _.flatten(_.pluck(branches, 'parents'));
             var permittedBranches = _.pluck(branches, 'id');
             var allBranchIDs = _.uniq(_.union(allParents, permittedBranches));
 
-            return Branch.find(allBranchIDs).populate('children');
+            return Branch.find(allBranchIDs);
 
         }).then(function (allBranches) {
-            allBranches = _.map(allBranches, function(b) {
+            allBranches = _.map(allBranches, function (b) {
                 return b.toJSON();
             });
 
@@ -109,8 +113,9 @@ module.exports = {
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
 
             // Get all levels in tree form
-            branchService.getLevelsTree(levels, allBranches, function(err, levels) {
+            branchService.getLevelsTree(levels, allBranches, function (err, levels) {
                 if (err) return cb(err);
+
                 return cb(null, levels);
             });
 
@@ -127,19 +132,34 @@ module.exports = {
      * @returns {*}
      */
     getLevelsTree: function (levels, allBranches, cb) {
-        // Length = 1, 2, 3 / array = 0, 1, 2 => and we don't look last level because it don't have children, so length-2
-        for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
-            _.each(levels[levelNo], function (level) {
-                _.each(level.children, function (child, key) {
-                    var childFound = _.findWhere(allBranches, {parent: level.id});
-                    if (childFound) level.children[key] = childFound;
 
-                    if (childFound) delete childFound.parent;
+        for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
+            _.each(levels[levelNo], function (branch) {
+
+                //var children = levels[levelNo + 1];
+                var children = _.filter(levels[levelNo + 1], function (child) {
+                    return child.parent === branch.id
                 });
+
+                branch.children = children;
             });
         }
 
         return cb(null, levels[0]);
+
+        // Length = 1, 2, 3 / array = 0, 1, 2 => and we don't look last level because it don't have children, so length-2
+        //for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
+        //    _.each(levels[levelNo], function (level) {
+        //        _.each(level.children, function (child, key) {
+        //            var childFound = _.findWhere(allBranches, {parent: level.id});
+        //            if (childFound) level.children[key] = childFound;
+        //
+        //            if (childFound) delete childFound.parent;
+        //        });
+        //    });
+        //}
+        //
+        //return cb(null, levels[0]);
     },
 
     /**
@@ -157,7 +177,7 @@ module.exports = {
                 return cb(null, users);
             });
 
-        // multiple levels
+            // multiple levels
         } else {
             var children = [];
             children.push(params.id);
@@ -207,5 +227,18 @@ module.exports = {
         }).catch(function (err) {
             return cb(err);
         });
+    },
+
+
+    /**
+     * Get users with role 'prof' for each branch
+     * @param branches
+     * @param cb
+     */
+    getProfs: function (branches, cb) {
+
+        async.map
+
     }
+
 };
