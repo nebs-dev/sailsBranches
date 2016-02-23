@@ -100,15 +100,15 @@ module.exports = {
             var permittedBranches = _.pluck(branches, 'id');
             var allBranchIDs = _.uniq(_.union(allParents, permittedBranches));
 
-            return Branch.find(allBranchIDs);
+            return [Branch.find(allBranchIDs), branches];
 
-        }).then(function (allBranches) {
+        }).spread(function (allBranches, permittedBranches) {
             allBranches = _.map(allBranches, function (b) {
                 return b.toJSON();
             });
 
             // Get profs for each branch
-            branchService.getProfs(allBranches, function (err, allBranches) {
+            branchService.getProfs(allBranches, permittedBranches, function (err, allBranches) {
                 if (err) return cb(err);
 
                 // group branches by level
@@ -132,17 +132,12 @@ module.exports = {
      * @param branches
      * @param cb
      */
-    getProfs: function (branches, cb) {
-
-        // group branches by level
-        var levels = _.toArray(_.groupBy(branches, 'level'));
-        // find last level - only branches from this level should have profs
-        var lastLevel = levels[levels.length - 1];
-
+    getProfs: function (branches, permittedBranches, cb) {
+        
         // each branch
         async.each(branches, function (branch, callback) {
             // if it's not in last level, don't get profs
-            if (!_.contains(lastLevel, branch)) return callback();
+            if (!_.contains(_.pluck(permittedBranches, 'id'), branch.id)) return callback();
 
             // recursive function that search for profs in branch parents if branch don't have any
             findProfs(branch);
