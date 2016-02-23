@@ -80,7 +80,7 @@ module.exports = {
             var levels = _.toArray(_.groupBy(allBranches, 'level'));
 
             // Get all levels in tree form
-            branchService.getLevelsTree(levels, allBranches, function (err, levels) {
+            branchService.getLevelsTree(levels, function (err, levels) {
                 if (err) return cb(err);
                 return cb(null, levels);
             });
@@ -90,12 +90,10 @@ module.exports = {
     /**
      * Get branch list for student
      * @param children
-     * @param tree
      * @param cb
      */
     studentList: function (children, cb) {
         Branch.find(children).then(function (branches) {
-
 
             // Get all branches (permitted branches and all its parents)
             var allParents = _.flatten(_.pluck(branches, 'parents'));
@@ -109,14 +107,19 @@ module.exports = {
                 return b.toJSON();
             });
 
-            // group branches by level
-            var levels = _.toArray(_.groupBy(allBranches, 'level'));
-
-            // Get all levels in tree form
-            branchService.getLevelsTree(levels, allBranches, function (err, levels) {
+            // Get profs for each branch
+            branchService.getProfs(allBranches, function (err, allBranches) {
                 if (err) return cb(err);
 
-                return cb(null, levels);
+                // group branches by level
+                var levels = _.toArray(_.groupBy(allBranches, 'level'));
+
+                // Get all levels in tree form
+                branchService.getLevelsTree(levels, function (err, levels) {
+                    if (err) return cb(err);
+
+                    return cb(null, levels);
+                });
             });
 
         }).catch(function (err) {
@@ -125,18 +128,68 @@ module.exports = {
     },
 
     /**
+     * Get users with role 'prof' for each branch
+     * @param branches
+     * @param cb
+     */
+    getProfs: function (branches, cb) {
+
+        // group branches by level
+        var levels = _.toArray(_.groupBy(branches, 'level'));
+        // find last level - only branches from this level should have profs
+        var lastLevel = levels[levels.length - 1];
+
+        // each branch
+        async.each(branches, function (branch, callback) {
+            // if it's not in last level, don't get profs
+            if (!_.contains(lastLevel, branch)) return callback();
+
+            // recursive function that search for profs in branch parents if branch don't have any
+            findProfs(branch);
+            function findProfs(branchTpm) {
+                Permission.find({branch: branchTpm.id}).then(function (permissions) {
+                    var usersIds = _.pluck(permissions, 'user');
+                    return User.find(usersIds).populate('role');
+
+                }).then(function (users) {
+
+                    var profs = _.filter(users, function (user) {
+                        return user.role.name === 'prof'
+                    });
+                    branchTpm.profs = profs;
+
+                    if (branchTpm.profs.length || !branchTpm.parent) {
+                        branch.profs = profs;
+                        return callback();
+                    } else {
+                        Branch.findOne(branchTpm.parent).then(function (parent) {
+                            findProfs(parent);
+                        }).catch(function (err) {
+                            return callback(err);
+                        });
+                    }
+
+                }).catch(function (err) {
+                    return callback(err);
+                });
+            }
+
+        }, function (err) {
+            if (err) return cb(err);
+            return cb(null, branches);
+        });
+    },
+
+    /**
      * Get all levels in tree form
      * @param levels
-     * @param allBranches
      * @param cb
      * @returns {*}
      */
-    getLevelsTree: function (levels, allBranches, cb) {
-
+    getLevelsTree: function (levels, cb) {
         for (var levelNo = levels.length - 2; levelNo >= 0; levelNo--) {
             _.each(levels[levelNo], function (branch) {
 
-                //var children = levels[levelNo + 1];
                 var children = _.filter(levels[levelNo + 1], function (child) {
                     return child.parent === branch.id
                 });
@@ -160,7 +213,8 @@ module.exports = {
         //}
         //
         //return cb(null, levels[0]);
-    },
+    }
+    ,
 
     /**
      * Get all users by level, role && branchIDs
@@ -194,7 +248,8 @@ module.exports = {
                 });
             });
         }
-    },
+    }
+    ,
 
     /**
      * Get users by branchIds and role
@@ -227,18 +282,6 @@ module.exports = {
         }).catch(function (err) {
             return cb(err);
         });
-    },
-
-
-    /**
-     * Get users with role 'prof' for each branch
-     * @param branches
-     * @param cb
-     */
-    getProfs: function (branches, cb) {
-
-        async.map
-
     }
-
-};
+}
+;
