@@ -47,7 +47,7 @@ module.exports = {
         async.until(function () {
             return !children.length;
         }, function (callback) {
-            Branch.find(children).populate('children').populate('media').then(function (branches) {
+            Branch.find(children).populate(['children', 'media', 'events']).then(function (branches) {
                 var allChildren = [];
 
                 _.each(branches, function (branch) {
@@ -133,10 +133,10 @@ module.exports = {
      * @param cb
      */
     getProfs: function (branches, permittedBranches, cb) {
-        
+
         // each branch
         async.each(branches, function (branch, callback) {
-            // if it's not in last level, don't get profs
+            // if branch is not in permitted branches, don't get profs
             if (!_.contains(_.pluck(permittedBranches, 'id'), branch.id)) return callback();
 
             // recursive function that search for profs in branch parents if branch don't have any
