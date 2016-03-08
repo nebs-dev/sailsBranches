@@ -13,42 +13,15 @@ describe('Branch', function(){
                         .send({ email: 'hrca@gmail.com', password: 'hrca123' })
                         .expect(200)
                         .end(function(err, res) {
-                            if (err) JSON.parse(res.text)
+                            if (err) assert.equal(JSON.parse(res.text));
 
                             var response = JSON.parse(res.text);
                             next(null, response.token);
                         });
                 },
-                function createBranch(token, next) {
+                function getBranches(token, next) {
                     request(url)
-                        .post('/api/branch/create')
-                        .send({name: 'Web'})
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token);
-                        });
-                },
-                function createBranch(token, next) {
-                    request(url)
-                        .post('/api/branch/create')
-                        .send({name: 'IOS'})
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token);
-                        });
-                },
-                function createBranch(token, next) {
-                    request(url)
-                        .post('/api/branch/create')
-                        .send({name: 'Android'})
+                        .get('/api/branches')
                         .set('Authorization', 'Bearer ' + token)
                         .expect(200)
                         .end(function(err, res) {
@@ -58,7 +31,9 @@ describe('Branch', function(){
                             next(null, token, response);
                         });
                 },
-                function createBranchWithParent(token, branch, next) {
+                function createBranchWithParent(token, branches, next) {
+                    var branch = _.findWhere(branches, {name: 'Android'});
+
                     request(url)
                         .post('/api/branch/create')
                         .send({ name: 'testBranchHrca2', parent: branch.id })
@@ -82,59 +57,6 @@ describe('Branch', function(){
 
                             var response = JSON.parse(res.text);
                             next(null, token);
-                        });
-                },
-                function getBranches(token, next) {
-                    request(url)
-                        .get('/api/branches')
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200, done);
-                }
-            ],
-            function finish(err, result) {
-                done(err);
-            }
-        );
-    });
-
-    it('Get student and add permission for first branch', function(done) {
-        async.waterfall(
-            [
-                function login(next) {
-                    request(url)
-                        .post('/api/auth/login')
-                        .send({ email: 'hrca@gmail.com', password: 'hrca123' })
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, response.token, response.user);
-                        });
-                },
-                function findTreeUsers(token, user, next) {
-                    request(url)
-                        .get('/api/tree/users')
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token, user, response[0]);
-                        });
-                },
-                function addPermissionStudent(token, user, student, next) {
-                    request(url)
-                        .post('/api/permission/add')
-                        .send({ user: student.id, branch: user.branches[0].id })
-                        .set('Authorization', 'Bearer ' + token)
-                        .expect(200)
-                        .end(function(err, res) {
-                            if (err) assert.equal(JSON.parse(res.text));
-
-                            var response = JSON.parse(res.text);
-                            next(null, token, response);
                         });
                 }
             ],

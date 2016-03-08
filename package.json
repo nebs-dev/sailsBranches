@@ -18,7 +18,7 @@
   "scripts": {
     "start": "node app.js",
     "debug": "node debug app.js",
-    "test": "BLUEBIRD_W_FORGOTTEN_RETURN=0 node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/controllers/AuthController.test.js test/integration/controllers/UserController.test.js test/integration/**/*.test.js"
+    "test": "BLUEBIRD_W_FORGOTTEN_RETURN=0 node ./node_modules/mocha/bin/mocha test/bootstrap.test.js test/integration/controllers/AuthController.test.js test/integration/appInit.test.js  test/integration/**/*.test.js"
   },
   "main": "app.js",
   "repository": {

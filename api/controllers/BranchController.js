@@ -62,8 +62,8 @@ module.exports = {
             branchService.list([branch.id], true, function (err, branches) {
                 if (err) return res.negotiate(err);
 
+                // Get users from this branch
                 User.find({tree: branch.tree}).populate(['permissions', 'role']).then(function (users) {
-
                     users = _.filter(users, function (user) {
                         if (user.role.name !== 'superadmin' && user.role.name !== 'superprof') {
                             var permissions = _.pluck(user.permissions, 'branch');
