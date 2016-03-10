@@ -49,7 +49,7 @@ describe('Branch', function(){
                 function updateBranch(token, branch, next) {
                     request(url)
                         .post('/api/branch/update/' + branch.id)
-                        .send({ name: 'Android2' })
+                        .send({ name: 'Android' })
                         .set('Authorization', 'Bearer ' + token)
                         .expect(200)
                         .end(function(err, res) {

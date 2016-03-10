@@ -2,6 +2,7 @@ var request = require('supertest');
 var url = 'http://localhost:1337';
 var async = require('async');
 var assert = require('assert');
+var fs = require('fs-extra');
 
 describe('App Init', function () {
 
@@ -115,6 +116,26 @@ describe('App Init', function () {
             .end(function (err, res) {
                 if (err) assert.equal(JSON.parse(res.text));
                 done();
+            });
+    });
+
+    it('Upload test media', function (done) {
+        request(url)
+            .post('/api/media/upload')
+            .set('Authorization', 'Bearer ' + testData.token)
+            .field('title', 'testMedia')
+            .attach('fileToUpload', 'uploads/test.jpg')
+            .expect(200)
+            .end(function (err, res) {
+                if (err) assert.equal(JSON.parse(res.text));
+
+                var url = JSON.parse(res.text).url.split('/').pop();
+                var filePath = 'uploads/media/' + url;
+
+                fs.remove(filePath, function (error) {
+                    if (error) return assert.equal(JSON.parse(error));
+                    done();
+                });
             });
     });
 
