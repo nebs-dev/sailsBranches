@@ -4,6 +4,9 @@ var async = require('async');
 var assert = require('assert');
 
 describe('Branch', function(){
+
+    var testData = {};
+
     it('should be able to consume /api/branches, api/branch/create, api/branch/update routes', function(done) {
         async.waterfall(
             [
@@ -16,6 +19,8 @@ describe('Branch', function(){
                             if (err) assert.equal(JSON.parse(res.text));
 
                             var response = JSON.parse(res.text);
+                            testData.superprof = response.user;
+                            testData.superprofToken = response.token;
                             next(null, response.token);
                         });
                 },
@@ -78,6 +83,8 @@ describe('Branch', function(){
                             if (err) assert.equal(JSON.parse(res.text));
 
                             var response = JSON.parse(res.text);
+                            testData.student = response;
+                            testData.studentToken = response.token;
                             next(null, response.token, response.user);
                         });
                 },
@@ -102,6 +109,7 @@ describe('Branch', function(){
                             if (err) assert.equal(JSON.parse(res.text));
 
                             var response = JSON.parse(res.text);
+                            testData.branch = response;
                             next(null, token, response);
                         });
                 }
@@ -110,6 +118,19 @@ describe('Branch', function(){
                 done(err);
             }
         );
+    });
+
+    it('Get branches for student', function(done) {
+        request(url)
+            .get('/api/student/branches/')
+            .set('Authorization', 'Bearer ' + testData.studentToken)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) assert.equal(JSON.parse(res.text));
+
+                var response = JSON.parse(res.text);
+                done();
+            });
     });
 
 });

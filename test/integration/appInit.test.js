@@ -124,6 +124,9 @@ describe('App Init', function () {
             .post('/api/media/upload')
             .set('Authorization', 'Bearer ' + testData.token)
             .field('title', 'testMedia')
+            .field('branches', testData.branches[0].id)
+            .field('categories', 'testCategory1')
+            .field('categories', 'testCategory2')
             .attach('fileToUpload', 'uploads/test.jpg')
             .expect(200)
             .end(function (err, res) {
