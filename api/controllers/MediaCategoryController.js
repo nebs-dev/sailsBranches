@@ -28,8 +28,26 @@ module.exports = {
     create: function (req, res) {
         var params = req.params.all();
 
-        MediaCategory.create(params).then(function (category) {
-            return res.json(category);
+        User.findOne(req.token.userId).populate('role').then(function (reqUser) {
+            if (!reqUser) return res.notFound('User not found');
+
+            // Superadmin must send tree ID
+            if (reqUser.role === 'superadmin') {
+                if (!params.tree) return req.customBadRequest();
+            } else {
+                params.tree = reqUser.tree;
+            }
+
+
+            return MediaCategory.findOne({'tree': params.tree, 'title': params.title});
+
+        }).then(function (mediaCategory) {
+            if (mediaCategory) return res.customBadRequest('Category already exist');
+            return MediaCategory.create(params);
+
+        }).then(function (category) {
+            return res.ok(category);
+
         }).catch(function (err) {
             return res.negotiate(err);
         });
@@ -44,7 +62,7 @@ module.exports = {
         MediaCategory.destroy(req.params.id).then(function () {
             return res.ok();
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     },
 
@@ -52,7 +70,7 @@ module.exports = {
         MediaCategory.findOne(req.params.id).populate('media').then(function (category) {
             return res.ok(category);
         }).catch(function (err) {
-           return res.negotiate(err);
+            return res.negotiate(err);
         });
     }
 
