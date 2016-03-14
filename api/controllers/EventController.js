@@ -30,6 +30,22 @@ module.exports = {
     },
 
     /**
+     * Update event
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+      var params = req.params.all();
+
+        Event.update(req.params.id, params).then(function (events) {
+            return res.ok(events[0]);
+
+        }).catch(function (err) {
+           return res.negotiate(err);
+        });
+    },
+
+    /**
      * List all events for user
      * @param req
      * @param res
@@ -37,6 +53,19 @@ module.exports = {
     list: function (req, res) {
         eventService.getList(req, function (err, events) {
             return res.ok(events);
+        });
+    },
+
+    /**
+     * Destroy event
+     * @param req
+     * @param res
+     */
+    destroy: function (req, res) {
+        Event.destroy(req.params.id).then(function () {
+            return res.ok();
+        }).catch(function (err) {
+            return res.negotiate(err);
         });
     }
 

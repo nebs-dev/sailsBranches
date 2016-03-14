@@ -402,6 +402,16 @@ module.exports.routes = {
      */
     'GET /api/media/list': 'Media.list',
 
+    /**
+     * @api {post} /api/media/update update media
+     * @apiGroup Media
+     *
+     * @apiParam {string} title media title
+     * @apiParam {array} branches Branches IDs
+     * @apiParam {array} categories media categories (array of strings)
+     */
+    'POST /api/media/update/:id': 'Media.update',
+
 
     ///////////////////////////
     ////////// EVENT //////////
@@ -426,6 +436,12 @@ module.exports.routes = {
      * @apiGroup Event
      */
     'GET /api/events': 'Event.list',
+
+    /**
+     * @api {post} /api/event/destroy/:id list
+     * @apiGroup Event
+     */
+    'POST /api/event/destroy/:id': 'Event.destroy',
 
     ////////////////////////////////
     ////////// EVENT TYPE //////////

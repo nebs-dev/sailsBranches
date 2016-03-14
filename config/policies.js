@@ -80,6 +80,8 @@ module.exports.policies = {
         'getOne': ['tokenAuth', 'mediaAccess'],
         'upload': ['tokenAuth', 'isProf'],
         'list': ['tokenAuth', 'isSuperprof'],
+        'update': ['tokenAuth', 'isProf'],
+        'destroy': ['tokenAuth', 'isProf'],
         '*': true
     },
 
@@ -88,6 +90,9 @@ module.exports.policies = {
     },
 
     'EventController': {
+        'create': ['tokenAuth', 'isProf'],
+        'update': ['tokenAuth', 'isProf'],
+        'destroy': ['tokenAuth', 'isProf'],
         '*': ['tokenAuth']
     },
 

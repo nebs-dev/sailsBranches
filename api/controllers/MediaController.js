@@ -186,6 +186,19 @@ module.exports = {
                 return res.negotiate(err);
             });
         });
+    },
+
+    /**
+     * Destrpy media
+     * @param req
+     * @param res
+     */
+    destroy: function (req, res) {
+        Media.destroy(req.params.id).then(function () {
+            return res.ok();
+        }).catch(function (err) {
+            return res.negotiate(err);
+        });
     }
 
 };
