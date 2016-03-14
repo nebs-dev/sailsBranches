@@ -53,7 +53,8 @@ module.exports = {
 
         categories: {
             collection: 'mediaCategory',
-            via: 'media'
+            via: 'media',
+            defaultsTo: []
         },
 
         tree: {
@@ -63,7 +64,8 @@ module.exports = {
 
         branches: {
             collection: 'branch',
-            via: 'media'
+            via: 'media',
+            defaultsTo: []
         },
 
         toJSON: function () {
