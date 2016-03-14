@@ -160,6 +160,32 @@ module.exports = {
         }).catch(function (err) {
             return res.negotiate(err);
         });
+    },
+
+    /**
+     * Update media
+     * @param req
+     * @param res
+     */
+    update: function (req, res) {
+        var params = req.params.all();
+
+        mediaService.checkBranches(req, function (err, params) {
+            if (err) return res.unauthorized();
+
+            var categoryParams = _.clone(params);
+            delete params.categories;
+
+            Media.update(req.params.id, params).then(function (media) {
+                mediaService.saveCategories(media[0], categoryParams, function (err, media) {
+                    if (err) return res.negotiate(err);
+                    return res.ok(media);
+                });
+
+            }).catch(function (err) {
+                return res.negotiate(err);
+            });
+        });
     }
 
 };
