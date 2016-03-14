@@ -81,7 +81,7 @@ module.exports = {
             params.categories = [params.categories];
         }
 
-        var mediaClone = _.clone(media);
+        var mediaClone = _.clone(media.toJSON());
 
         // each param.categories
         async.map(params.categories, function (category, callback) {
