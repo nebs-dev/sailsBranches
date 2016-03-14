@@ -46,10 +46,18 @@ module.exports = {
 
                     // Create media object with params
                     Media.create(params).then(function (media) {
-                        // Create/add media categories from params
-                        mediaService.saveCategories(media, categoryParams, function (err, media) {
-                            if (err) return res.negotiate(err);
-                            return res.ok(media);
+                        Media.findOne(media.id).populate('branches').then(function (media) {
+                            // Create/add media categories from params
+                            mediaService.saveCategories(media, categoryParams, function (err, media) {
+                                if (err) return res.negotiate(err);
+                                return res.ok(media);
+                            });
+                        }).catch(function (err) {
+                            // if err remove uploaded file
+                            fs.remove(uploadedFiles[0].fd, function (error) {
+                                if (error) return res.negotiate(error);
+                                return res.negotiate(err);
+                            });
                         });
 
                     }).catch(function (err) {

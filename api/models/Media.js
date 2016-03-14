@@ -71,7 +71,6 @@ module.exports = {
         toJSON: function () {
             var obj = this.toObject();
             obj.url = sails.getBaseurl() + '/uploads/media/' + obj.url;
-            obj.branches = obj.branches || [];
             return obj;
         }
     },
