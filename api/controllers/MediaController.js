@@ -152,7 +152,7 @@ module.exports = {
         User.findOne(req.token.userId).then(function (reqUser) {
             // superadmin need to send tree ID in URL
             var tree = reqUser === 'superadmin' ? params.tree : reqUser.tree;
-            return Media.find({tree: tree});
+            return Media.find({tree: tree}).populate(['categories', 'branches']);
 
         }).then(function (media) {
             return res.ok(media);

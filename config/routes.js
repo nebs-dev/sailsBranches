@@ -403,7 +403,7 @@ module.exports.routes = {
     'GET /api/media/list': 'Media.list',
 
     /**
-     * @api {post} /api/media/update update media
+     * @api {post} /api/media/update/:id update media
      * @apiGroup Media
      *
      * @apiParam {string} title media title

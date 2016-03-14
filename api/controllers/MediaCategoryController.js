@@ -43,10 +43,12 @@ module.exports = {
 
         }).then(function (mediaCategory) {
             if (mediaCategory) return res.customBadRequest('Category already exist');
-            return MediaCategory.create(params);
 
-        }).then(function (category) {
-            return res.ok(category);
+            MediaCategory.create(params).then(function (category) {
+                return res.ok(category);
+            }).catch(function (err) {
+                return res.negotiate(err);
+            });
 
         }).catch(function (err) {
             return res.negotiate(err);
