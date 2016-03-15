@@ -22,7 +22,8 @@ module.exports = {
 
         tree: {
             model: 'tree',
-            via: 'mediaCategories'
+            via: 'mediaCategories',
+            required: true
         }
     },
 

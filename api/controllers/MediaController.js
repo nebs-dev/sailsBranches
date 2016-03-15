@@ -48,7 +48,7 @@ module.exports = {
                     Media.create(params).then(function (media) {
                         Media.findOne(media.id).populate('branches').then(function (media) {
                             // Create/add media categories from params
-                            mediaService.saveCategories(media, categoryParams, function (err, media) {
+                            mediaService.saveCategories(media, categoryParams, req.token.userId, function (err, media) {
                                 if (err) return res.negotiate(err);
                                 return res.ok(media);
                             });
@@ -185,7 +185,7 @@ module.exports = {
             delete params.categories;
 
             Media.update(req.params.id, params).then(function (media) {
-                mediaService.saveCategories(media[0], categoryParams, function (err, media) {
+                mediaService.saveCategories(media[0], categoryParams, req.token.userId, function (err, media) {
                     if (err) return res.negotiate(err);
                     return res.ok(media);
                 });

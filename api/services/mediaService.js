@@ -74,7 +74,7 @@ module.exports = {
      * @param cb
      * @returns {*}
      */
-    saveCategories: function (media, params, cb) {
+    saveCategories: function (media, params, userId, cb) {
         if (!params.categories) return cb(null, media);
 
         if (!(params.categories instanceof Array)) {
@@ -83,37 +83,49 @@ module.exports = {
 
         var mediaClone = _.clone(media.toJSON());
 
-        // each param.categories
-        async.map(params.categories, function (category, callback) {
-            // find category by title
-            MediaCategory.findOne({'title': category}).then(function (mediaCategory) {
+        // Find req user
+        User.findOne(userId).populate('role').then(function (reqUser) {
+            if (reqUser.role.name === 'superadmin') {
+                if (!params.tree) return cb('Tree is mandatory for superadmin');
+            } else {
+                params.tree = reqUser.tree;
+            }
 
-                // if category not found, create it
-                if (!mediaCategory) {
-                    return MediaCategory.create({'title': category});
-                } else {
-                    return mediaCategory;
-                }
+            // each param.categories
+            async.map(params.categories, function (category, callback) {
+                // find category by title
+                MediaCategory.findOne({'title': category, 'tree': params.tree}).then(function (mediaCategory) {
 
-            }).then(function (mCategory) {
-                return callback(null, mCategory);
+                    // if category not found, create it
+                    if (!mediaCategory) {
+                        return MediaCategory.create({'title': category, 'tree': params.tree});
+                    } else {
+                        return mediaCategory;
+                    }
 
-            }).catch(function (err) {
-                return cb(err);
+                }).then(function (mCategory) {
+                    return callback(null, mCategory);
+
+                }).catch(function (err) {
+                    return cb(err);
+                });
+
+            }, function (err, data) {
+                if (err) return cb(err);
+
+                // add found/created category to media
+                media.categories.add(data);
+                media.save({populate: true}, function (err) {
+                    if (err) return callback(err);
+
+                    mediaClone.categories = data;
+                    // return media with categories
+                    return cb(null, mediaClone);
+                });
             });
 
-        }, function (err, data) {
-            if (err) return cb(err);
-
-            // add found/created category to media
-            media.categories.add(data);
-            media.save({populate: true}, function (err) {
-                if (err) return callback(err);
-
-                mediaClone.categories = data;
-                // return media with categories
-                return cb(null, mediaClone);
-            });
+        }).catch(function (err) {
+           return cb(err);
         });
     }
 

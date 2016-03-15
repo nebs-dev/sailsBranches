@@ -38,7 +38,6 @@ module.exports = {
                 params.tree = reqUser.tree;
             }
 
-
             return MediaCategory.findOne({'tree': params.tree, 'title': params.title});
 
         }).then(function (mediaCategory) {
